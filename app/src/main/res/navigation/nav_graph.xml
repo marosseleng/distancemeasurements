@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/measurements">
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.marosseleng.distancemeasurements.ui.MainActivity"
+        android:label="MainActivity" />
+
+    <fragment
+        android:id="@+id/measurements"
+        android:name="com.marosseleng.distancemeasurements.ui.measurements.MeasurementsFragment"
+        android:label="fragment_measurements"
+        tools:layout="@layout/fragment_measurements">
+        <action
+            android:id="@+id/openMeasurementDetailAction"
+            app:destination="@id/measurementDetail"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/newMeasurement"
+        android:name="com.marosseleng.distancemeasurements.ui.newmeasurement.NewMeasurementFragment">
+        <action
+            android:id="@+id/action_newMeasurement_to_newRss"
+            app:destination="@id/newRss" />
+        <action
+            android:id="@+id/action_newMeasurement_to_newBluetooth"
+            app:destination="@id/newBluetooth"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_newMeasurement_to_newRtt"
+            app:destination="@id/newRtt" />
+    </fragment>
+
+    <fragment android:id="@+id/thirdItem" />
+
+    <fragment
+        android:id="@+id/measurementDetail"
+        android:name="com.marosseleng.distancemeasurements.ui.measurementdetail.MeasurementDetailFragment"
+        android:label="MeasurementDetailFragment">
+        <argument
+            android:name="measurement"
+            app:argType="com.marosseleng.distancemeasurements.data.Measurement" />
+    </fragment>
+    <fragment
+        android:id="@+id/newBluetooth"
+        android:name="com.marosseleng.distancemeasurements.ui.newmeasurement.NewBluetoothMeasurementFragment" />
+    <fragment
+        android:id="@+id/newRtt"
+        android:name="com.marosseleng.distancemeasurements.ui.newmeasurement.NewWifiRttMeasurementFragment" />
+    <fragment
+        android:id="@+id/newRss"
+        android:name="com.marosseleng.distancemeasurements.ui.newmeasurement.NewWifiRssMeasurementFragment" />
+    <action android:id="@+id/action_global_measurements" app:destination="@id/measurements" />
+    <action android:id="@+id/action_global_newMeasurement" app:destination="@id/newMeasurement" />
+    <action android:id="@+id/action_global_thirdItem" app:destination="@id/thirdItem" />
+
+</navigation>

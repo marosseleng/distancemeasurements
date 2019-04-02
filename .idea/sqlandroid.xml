@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SQLAndroidSettings">
+    <option name="databases">
+      <map>
+        <entry key="asd_/Users/marosseleng/Development/distancemeasurements/AndroidSqlEditorDatabases/">
+          <value>
+            <list>
+              <option value="B2NGAA8841005838" />
+              <option value="/databases/database.db" />
+              <option value="asd" />
+              <option value="asd" />
+              <option value="false" />
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="packageNameByDirectory">
+      <map>
+        <entry key="$PROJECT_DIR$/AndroidSqlEditorDatabases/" value="com.marosseleng.distancemeasurements" />
+      </map>
+    </option>
+    <option name="storageVersion" value="2" />
+  </component>
+</project>
