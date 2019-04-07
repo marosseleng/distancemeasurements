@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
@@ -43,7 +43,7 @@ class MeasurementsFragment : Fragment(), AdapterView.OnItemSelectedListener {
             adapter = ArrayAdapter<String>(
                 context,
                 android.R.layout.simple_spinner_item,
-                MeasurementType.values().map { it.toString() } + "All")
+                MeasurementType.values().map { it.toString() } + getString(R.string.measurements_list_measurement_type_all))
                 .apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
@@ -53,6 +53,8 @@ class MeasurementsFragment : Fragment(), AdapterView.OnItemSelectedListener {
         viewModel = ViewModelProviders.of(this).get(MeasurementsViewModel::class.java)
 
         viewModel.measurements.observe(this, Observer { measurements: List<Measurement> ->
+            noMeasurements.isVisible = measurements.isEmpty()
+            list.isVisible = !noMeasurements.isVisible
             measurementAdapter.items = measurements
         })
     }

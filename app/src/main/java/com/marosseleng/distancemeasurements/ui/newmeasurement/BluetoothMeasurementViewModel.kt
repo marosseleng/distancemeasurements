@@ -17,7 +17,10 @@ import com.marosseleng.distancemeasurements.*
 import com.marosseleng.distancemeasurements.data.Measurement
 import com.marosseleng.distancemeasurements.data.MeasurementType
 import com.marosseleng.distancemeasurements.data.toMeasuredValueFactory
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -80,8 +83,6 @@ class BluetoothMeasurementViewModel : ViewModel() {
     // this field is redundant.. this functionality could be monitored using LiveData
     private val isScanning = AtomicBoolean(false)
 
-    private var note: String? = null
-
     fun startScan() {
         if (!isScanning.getAndSet(true)) {
             val selectedDevice = selectedDevice
@@ -140,10 +141,6 @@ class BluetoothMeasurementViewModel : ViewModel() {
         }
     }
 
-    fun noteChanged(newNote: String?) {
-        note = newNote
-    }
-
     fun retrySave() {
         save()
     }
@@ -167,8 +164,7 @@ class BluetoothMeasurementViewModel : ViewModel() {
         val measurement = Measurement(
             deviceName = selectedDevice?.device?.name ?: "???",
             deviceAddress = selectedDevice?.device?.address ?: "???",
-            measurementType = MeasurementType.BLE,
-            note = note
+            measurementType = MeasurementType.BLE
         )
         viewModelScope.launch(CoroutineExceptionHandler { _, throwable ->
             _measurementProgress.postValue(MeasurementProgress.NotStarted)

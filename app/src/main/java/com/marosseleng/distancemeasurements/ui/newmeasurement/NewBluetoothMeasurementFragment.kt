@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.marosseleng.distancemeasurements.ImplementedTextWatcher
 import com.marosseleng.distancemeasurements.R
 import com.marosseleng.distancemeasurements.ui.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -78,16 +76,18 @@ class NewBluetoothMeasurementFragment : Fragment() {
         super.onStart()
         val activity = activity ?: return
         if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
-            Toast.makeText(activity, "Permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, R.string.new_bluetooth_permission_denied, Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
         } else if (mBluetoothAdapter?.isEnabled == false) {
-            Toast.makeText(activity, "Bluetooth is off", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, R.string.new_bluetooth_bluetooth_off, Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
         }
     }
 
     private fun bindViewModel() {
         viewModel.devices.observe(this, Observer {
+            devicesListEmpty.isVisible = it.isEmpty()
+            devicesList.isVisible = !devicesListEmpty.isVisible
             beaconsAdapter.beacons = it
         })
         viewModel.measuredValues.observe(this, Observer {
@@ -98,7 +98,7 @@ class NewBluetoothMeasurementFragment : Fragment() {
             } else {
                 noValues.isVisible = false
                 valueList.isVisible = true
-                valuesAdapter.addItem(it[0].measuredValue.toInt())
+                valuesAdapter.addItem(it[0].measuredValue)
             }
         })
         viewModel.measurementInProgress.observe(this, Observer {
@@ -106,26 +106,26 @@ class NewBluetoothMeasurementFragment : Fragment() {
             startStop.text = ""
             when (it) {
                 is MeasurementProgress.NotStarted -> {
-                    startStop.text = "Start"
+                    startStop.setText(R.string.general_measurement_startstop_start)
                 }
                 is MeasurementProgress.Started -> {
-                    startStop.text = "Stop & Save"
+                    startStop.setText(R.string.general_measurement_startstop_stopsave)
                 }
                 is MeasurementProgress.Saving -> {
-                    startStop.text = "Saving…"
+                    startStop.setText(R.string.general_measurement_startstop_saving)
                     startStop.isEnabled = false
                     cancel.isEnabled = false
                 }
                 is MeasurementProgress.Saved -> {
-                    startStop.text = "Saved"
+                    startStop.setText(R.string.general_measurement_startstop_saved)
                     startStop.isEnabled = false
                     val anchorView = (activity as? MainActivity)?.getBottomNavigation() ?: valueList
-                    Snackbar.make(anchorView, "Measurement saved", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(anchorView, R.string.general_measurement_snackbar_saved, Snackbar.LENGTH_SHORT)
                         .setAnchorView(anchorView)
                         .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar?>() {
                             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                                 super.onDismissed(transientBottomBar, event)
-                                if (event != DISMISS_EVENT_ACTION) {
+                                if (event != DISMISS_EVENT_ACTION && isAdded) {
                                     transientBottomBar?.view?.postDelayed({
                                         findNavController().navigateUp()
                                     }, 100)
@@ -134,19 +134,19 @@ class NewBluetoothMeasurementFragment : Fragment() {
                                 }
                             }
                         })
-                        .setAction("View") {
+                        .setAction(R.string.general_measurement_snackbar_saved_view) {
 
                         }
                         .show()
 
                 }
                 is MeasurementProgress.NotSaved -> {
-                    startStop.text = "Not saved"
+                    startStop.setText(R.string.general_measurement_startstop_not_saved)
                     startStop.isEnabled = true
                     cancel.isEnabled = false
-                    Snackbar.make(bottomNavigation, "Measurement saved", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(bottomNavigation, R.string.general_measurement_snackbar_not_saved, Snackbar.LENGTH_SHORT)
                         .setAnchorView(bottomNavigation)
-                        .setAction("Retry") {
+                        .setAction(R.string.general_measurement_snackbar_not_saved_retry) {
                             viewModel.retrySave()
                         }
                         .show()
@@ -157,15 +157,14 @@ class NewBluetoothMeasurementFragment : Fragment() {
     }
 
     private fun setupUi() {
-        list.adapter = beaconsAdapter
-        list.addItemDecoration(DividerItemDecoration(activity, RecyclerView.VERTICAL))
-        valueList.adapter = valuesAdapter
-        valueList.addItemDecoration(DividerItemDecoration(activity, RecyclerView.VERTICAL))
-        note.editText?.addTextChangedListener(object : ImplementedTextWatcher() {
-            override fun afterTextChanged(s: Editable?) {
-                viewModel.noteChanged(s?.toString())
-            }
-        })
+        with(devicesList) {
+            adapter = beaconsAdapter
+            addItemDecoration(DividerItemDecoration(activity, RecyclerView.VERTICAL))
+        }
+        with(valueList) {
+            adapter = valuesAdapter
+            addItemDecoration(DividerItemDecoration(activity, RecyclerView.VERTICAL))
+        }
         cancel.setOnClickListener {
             devicesWrapper.isVisible = true
             measurementWrapper.isVisible = false
@@ -175,6 +174,7 @@ class NewBluetoothMeasurementFragment : Fragment() {
 
         startStop.setOnClickListener {
             startStop.isEnabled = false
+            // TODO grab sampling rate!
             viewModel.startStopClicked()
         }
     }

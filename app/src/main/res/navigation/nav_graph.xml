@@ -41,7 +41,9 @@
             app:destination="@id/newRtt" />
     </fragment>
 
-    <fragment android:id="@+id/thirdItem" />
+    <fragment
+        android:id="@+id/about"
+        android:name="com.marosseleng.distancemeasurements.ui.about.AboutFragment" />
 
     <fragment
         android:id="@+id/measurementDetail"
@@ -62,6 +64,6 @@
         android:name="com.marosseleng.distancemeasurements.ui.newmeasurement.NewWifiRssMeasurementFragment" />
     <action android:id="@+id/action_global_measurements" app:destination="@id/measurements" />
     <action android:id="@+id/action_global_newMeasurement" app:destination="@id/newMeasurement" />
-    <action android:id="@+id/action_global_thirdItem" app:destination="@id/thirdItem" />
+    <action android:id="@+id/action_global_thirdItem" app:destination="@id/about" />
 
 </navigation>

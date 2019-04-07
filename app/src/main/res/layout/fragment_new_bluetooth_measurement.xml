@@ -25,25 +25,36 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="Select the device to measure the distance from"
+                android:text="@string/new_bluetooth_select_device"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Overline" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/list"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="5"
-                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@android:layout/simple_list_item_2"
-                tools:visibility="visible" />
+                android:layout_height="match_parent">
 
-            <!-- TODO: TextView for empty list -->
+                <TextView
+                    android:id="@+id/devicesListEmpty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/new_bluetooth_select_device_empty"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/devicesList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="5"
+                    tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@android:layout/simple_list_item_2"
+                    tools:visibility="visible" />
+
+            </FrameLayout>
+
         </LinearLayout>
 
-        <include layout="@layout/inner_measurement_setup"/>
+        <include layout="@layout/inner_measurement_setup" />
     </LinearLayout>
-
 
 </ScrollView>

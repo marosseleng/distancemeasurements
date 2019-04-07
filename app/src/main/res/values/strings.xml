@@ -1,3 +1,66 @@
 <resources>
     <string name="app_name">Distance measurements</string>
+
+    <!-- Bottom navigation menu -->
+    <string name="menu_measurements">Measurements</string>
+    <string name="menu_new_measurement">New measurement</string>
+    <string name="menu_about">About</string>
+
+    <!-- Measurements list -->
+    <string name="measurements_list_measurement_type">Measurement type</string>
+    <string name="measurements_list_measurement_type_all">All</string>
+    <string name="measurements_list_measurements_empty">No measurements here yet</string>
+
+    <!-- Measurement detail -->
+    <string name="measurement_detail_title">Measurement detail</string>
+    <string name="measurement_detail_measured_values">Measured values</string>
+    <string name="measurement_detail_measured_values_empty">No measured values</string>
+    <string name="measurement_detail_graph">Graph</string>
+    <string name="measurement_detail_graph_label_real">Real distance</string>
+    <string name="measurement_detail_graph_label_measured">Measured distance</string>
+    <string name="measurement_detail_graph_export_icon">Export graph to a file</string>
+    <string name="measurement_detail_graph_export_failure">Couldn\'t export a graph</string>
+    <string name="measurement_detail_graph_export_failure_retry">Try again</string>
+    <string name="measurement_detail_graph_export_success">Graph successfuly exported</string>
+    <string name="measurement_detail_graph_export_success_view">View</string>
+    <string name="measurement_detail_storage_access_denied">Can\'t export, storage access denied</string>
+
+    <!-- Storage permissions rationale dialog -->
+    <string name="storage_rationale_title">External storage access</string>
+    <string name="storage_rationale_message">In order to export the graph and save it on your device, the permission to write into you device\'s storage is required.</string>
+    <string name="storage_rationale_allow">Allow</string>
+
+    <!-- New measurement -->
+    <string name="new_measurement_bluetooth_le">Bluetooth LE</string>
+    <string name="new_measurement_wifi_rss">Wifi RSS</string>
+    <string name="new_measurement_wifi_rtt">Wifi RTT</string>
+    <string name="new_measurement_begin">Begin</string>
+
+    <!-- New Bluetooth measurement -->
+    <string name="new_bluetooth_select_device">Select the device to measure the distance from</string>
+    <string name="new_bluetooth_select_device_empty">No devices available in the close proximity</string>
+    <string name="new_bluetooth_permission_denied">Location permission denied</string>
+    <string name="new_bluetooth_bluetooth_off">Bluetooth is off</string>
+
+    <!-- New Wifi RSS measurement -->
+    <string name="new_wifi_rss_not_connected">Make sure you are connected to a Wifi network and try again.</string>
+
+    <!-- General measurement -->
+    <string name="general_measurement_method_icon_description">Measurement type description icon</string>
+    <string name="general_measurement_sampling_rate_hint">Sampling rate (milliseconds)</string>
+    <string name="general_measurement_note_hint">Note</string>
+    <string name="general_measurement_real_distances_hint">Real distances (comma separated, in order)</string>
+    <string name="general_measurement_startstop_start">Start</string>
+    <string name="general_measurement_startstop_stopsave">Stop &amp; save</string>
+    <string name="general_measurement_startstop_saving">Saving…</string>
+    <string name="general_measurement_startstop_saved">Saved</string>
+    <string name="general_measurement_startstop_not_saved">Not saved</string>
+    <string name="general_measurement_cancel">Cancel</string>
+    <string name="general_measurement_measured_values">Measured values</string>
+    <string name="general_measurement_measured_values_empty">No values yet…</string>
+    <string name="general_measurement_snackbar_saved">Measurement saved</string>
+    <string name="general_measurement_snackbar_saved_view">View</string>
+    <string name="general_measurement_snackbar_not_saved">Measurement not saved</string>
+    <string name="general_measurement_snackbar_not_saved_retry">Retry</string>
+
 </resources>

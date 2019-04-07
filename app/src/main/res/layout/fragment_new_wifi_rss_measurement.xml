@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
-            android:text="Make sure you are connected to a WIFI network and try again."
+            android:text="@string/new_wifi_rss_not_connected"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
             android:visibility="visible"

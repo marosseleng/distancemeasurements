@@ -1,53 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
     tools:context=".ui.newmeasurement.NewMeasurementFragment">
 
-    <LinearLayout
+    <RadioGroup
+        android:id="@+id/radios"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_marginTop="8dp"
+        android:orientation="vertical">
 
-        <RadioGroup
-            android:id="@+id/radios"
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/newBluetooth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="8dp">
-            <com.google.android.material.radiobutton.MaterialRadioButton
-                android:id="@+id/newBluetooth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="Bluetooth LE"/>
-            <com.google.android.material.radiobutton.MaterialRadioButton
-                android:id="@+id/newRss"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="WiFi RSS"/>
-            <com.google.android.material.radiobutton.MaterialRadioButton
-                android:id="@+id/newRtt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="WiFi RTT"/>
-        </RadioGroup>
+            android:maxLines="1"
+            android:text="@string/new_measurement_bluetooth_le" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/selectMeasurementType"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/newRss"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:text="Begin" />
+            android:maxLines="1"
+            android:text="@string/new_measurement_wifi_rss" />
 
-    </LinearLayout>
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/newRtt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/new_measurement_wifi_rtt" />
+    </RadioGroup>
 
-</FrameLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/selectMeasurementType"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="@string/new_measurement_begin" />
+
+</LinearLayout>

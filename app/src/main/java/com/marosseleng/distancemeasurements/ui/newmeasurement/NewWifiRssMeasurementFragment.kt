@@ -1,7 +1,6 @@
 package com.marosseleng.distancemeasurements.ui.newmeasurement
 
 import android.os.Bundle
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +14,12 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.marosseleng.distancemeasurements.ImplementedTextWatcher
 import com.marosseleng.distancemeasurements.R
 import com.marosseleng.distancemeasurements.ui.MainActivity
 import com.marosseleng.distancemeasurements.wifiManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_new_wifi_rss_measurement.*
 import kotlinx.android.synthetic.main.inner_measurement_setup.*
-import timber.log.Timber
 
 /**
  * @author Maroš Šeleng
@@ -48,7 +45,7 @@ class NewWifiRssMeasurementFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get()
 
         valuesAdapter = RawMeasuredValueAdapter()
-        // TODO uncomment?
+        // TODO uncomment? => BETTER, add new items at the end of the list!!!!
 //        valuesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 //            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
 //                super.onItemRangeInserted(positionStart, itemCount)
@@ -62,7 +59,6 @@ class NewWifiRssMeasurementFragment : Fragment() {
 
     private fun bindViewModel() {
         viewModel.measuredValues.observe(this, Observer {
-            Timber.d("==>Observing: %s", it)
             if (it.isEmpty()) {
                 noValues.isVisible = true
                 valueList.isVisible = false
@@ -70,7 +66,7 @@ class NewWifiRssMeasurementFragment : Fragment() {
             } else {
                 noValues.isVisible = false
                 valueList.isVisible = true
-                valuesAdapter.addItem(it[0].measuredValue.toInt())
+                valuesAdapter.addItem(it[0].measuredValue)
             }
         })
 
@@ -79,47 +75,45 @@ class NewWifiRssMeasurementFragment : Fragment() {
             startStop.text = ""
             when (it) {
                 is MeasurementProgress.NotStarted -> {
-                    startStop.text = "Start"
+                    startStop.setText(R.string.general_measurement_startstop_start)
                 }
                 is MeasurementProgress.Started -> {
-                    startStop.text = "Stop & Save"
+                    startStop.setText(R.string.general_measurement_startstop_stopsave)
                 }
                 is MeasurementProgress.Saving -> {
-                    startStop.text = "Saving…"
+                    startStop.setText(R.string.general_measurement_startstop_saving)
                     startStop.isEnabled = false
                     cancel.isEnabled = false
                 }
                 is MeasurementProgress.Saved -> {
-                    startStop.text = "Saved"
+                    startStop.setText(R.string.general_measurement_startstop_saved)
                     startStop.isEnabled = false
                     val anchorView = (activity as? MainActivity)?.getBottomNavigation() ?: valueList
-                    Snackbar.make(anchorView, "Measurement saved", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(anchorView, R.string.general_measurement_snackbar_saved, Snackbar.LENGTH_SHORT)
                         .setAnchorView(anchorView)
                         .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar?>() {
                             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                                 super.onDismissed(transientBottomBar, event)
-                                if (event != DISMISS_EVENT_ACTION) {
-                                    transientBottomBar?.view?.postDelayed({
-                                        findNavController().navigateUp()
-                                    }, 100)
+                                if (event != DISMISS_EVENT_ACTION && this@NewWifiRssMeasurementFragment.isAdded) {
+                                    findNavController().navigateUp()
                                 } else {
                                     // view clicked
                                 }
                             }
                         })
-                        .setAction("View") {
+                        .setAction(R.string.general_measurement_snackbar_saved_view) {
 
                         }
                         .show()
 
                 }
                 is MeasurementProgress.NotSaved -> {
-                    startStop.text = "Not saved"
+                    startStop.setText(R.string.general_measurement_startstop_not_saved)
                     startStop.isEnabled = true
                     cancel.isEnabled = false
-                    Snackbar.make(bottomNavigation, "Measurement saved", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(bottomNavigation, R.string.general_measurement_snackbar_not_saved, Snackbar.LENGTH_SHORT)
                         .setAnchorView(bottomNavigation)
-                        .setAction("Retry") {
+                        .setAction(R.string.general_measurement_snackbar_not_saved_retry) {
                             viewModel.retrySave()
                         }
                         .show()
@@ -132,11 +126,6 @@ class NewWifiRssMeasurementFragment : Fragment() {
     private fun setupUi() {
         valueList.adapter = valuesAdapter
         valueList.addItemDecoration(DividerItemDecoration(activity, RecyclerView.VERTICAL))
-        note.editText?.addTextChangedListener(object : ImplementedTextWatcher() {
-            override fun afterTextChanged(s: Editable?) {
-                viewModel.noteChanged(s?.toString())
-            }
-        })
         cancel.setOnClickListener {
             viewModel.cancelClicked()
             findNavController().navigateUp()

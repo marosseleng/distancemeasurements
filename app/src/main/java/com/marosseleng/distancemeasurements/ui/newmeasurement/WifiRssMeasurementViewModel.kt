@@ -37,8 +37,6 @@ class WifiRssMeasurementViewModel : ViewModel() {
 
     private var measurementJob: Job? = null
 
-    private var note: String? = null
-
     private var selectedDevice: MeasurementAnchorDevice? = null
 
     private var wifiReceiver: WifiReceiver? = null
@@ -62,10 +60,6 @@ class WifiRssMeasurementViewModel : ViewModel() {
                 // TODO what to do here?
             }
         }
-    }
-
-    fun noteChanged(newNote: String?) {
-        note = newNote
     }
 
     fun retrySave() {
@@ -121,7 +115,7 @@ class WifiRssMeasurementViewModel : ViewModel() {
                 val info = wifiManager?.connectionInfo
                 if (info != null) {
                     Timber.d("==>Posting value %d", info.rssi)
-                    singleResults.postValue(MeasuredValue.Factory(info.rssi.toFloat(), System.currentTimeMillis()))
+                    singleResults.postValue(MeasuredValue.Factory(info.rssi, System.currentTimeMillis()))
                 }
             }
         }
@@ -138,7 +132,7 @@ class WifiRssMeasurementViewModel : ViewModel() {
             deviceName = selectedDevice?.name ?: "???",
             deviceAddress = selectedDevice?.address ?: "???",
             measurementType = MeasurementType.RSSI,
-            note = note
+            frequency = selectedDevice?.deviceFrequency ?: 2401
         )
         viewModelScope.launch(CoroutineExceptionHandler { _, throwable ->
             _measurementProgress.postValue(MeasurementProgress.NotStarted)
@@ -195,6 +189,5 @@ private fun WifiInfo?.toMeasurementAnchorDevice(): MeasurementAnchorDevice? {
     if (this == null) {
         return null
     }
-
-    return MeasurementAnchorDevice(name = ssid, address = macAddress)
+    return MeasurementAnchorDevice(name = ssid, address = macAddress, deviceFrequency = frequency)
 }

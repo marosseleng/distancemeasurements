@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- TODO selector for icons! -->
     <item
         android:id="@+id/measurements"
-        android:title="Measurements"
+        android:title="@string/menu_measurements"
         android:icon="@drawable/ic_history_black_24dp"/>
     <item
         android:id="@+id/newMeasurement"
-        android:title="New measurement"
-        android:icon="@drawable/ic_add_black_24dp"/>
+        android:title="@string/menu_new_measurement"
+        android:icon="@drawable/ic_add"/>
     <item
-        android:id="@+id/thirdItem"
-        android:title="Third item"
-        android:icon="@drawable/ic_do_not_disturb_black_24dp"/>
+        android:id="@+id/about"
+        android:title="@string/menu_about"
+        android:icon="@drawable/ic_info"/>
 
 </menu>

@@ -27,7 +27,8 @@
             android:src="@drawable/ic_bluetooth_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/general_measurement_method_icon_description" />
 
         <TextView
             android:id="@+id/anchorDescription"
@@ -54,29 +55,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Sampling rate (milliseconds)">
+        android:hint="@string/general_measurement_sampling_rate_hint">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:text="10" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/note"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Note">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <FrameLayout
@@ -91,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginStart="16dp"
-            android:text="cancel" />
+            android:text="@string/general_measurement_cancel" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/startStop"
@@ -100,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="16dp"
-            android:text="Start recording" />
+            tools:text="Start recording" />
     </FrameLayout>
 
     <TextView
@@ -109,7 +93,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="Measured values"
+        android:text="@string/general_measurement_measured_values"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Overline" />
 
     <FrameLayout
@@ -123,7 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="No values measured yet…"
+            android:text="@string/general_measurement_measured_values_empty"
             android:visibility="visible"
             tools:visibility="gone" />
 

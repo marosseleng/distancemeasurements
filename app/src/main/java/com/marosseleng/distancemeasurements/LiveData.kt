@@ -3,6 +3,7 @@ package com.marosseleng.distancemeasurements
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations.map
 import androidx.recyclerview.widget.DiffUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -128,5 +129,34 @@ fun <T> filterNot(source: LiveData<T>, filter: LiveData<Boolean>): LiveData<T> {
                 postValue(newResult)
             }
         }
+    }
+}
+
+fun <S, T> combineLatest(source1: LiveData<S>, source2: LiveData<T>): LiveData<Pair<S, T>> {
+    return MediatorLiveData<Pair<S, T>>().apply {
+        var lastFromSource1: S? = null
+        var lastFromSource2: T? = null
+        fun notify() {
+            val tmp1 = lastFromSource1
+            val tmp2 = lastFromSource2
+            if (tmp1 != null && tmp2 != null) {
+                postValue(tmp1 to tmp2)
+            }
+        }
+        addSource(source1) {
+            lastFromSource1 = it
+            notify()
+        }
+        addSource(source2) {
+            lastFromSource2 = it
+            notify()
+        }
+    }
+}
+
+fun <S, T, R> combineLatest(source1: LiveData<S>, source2: LiveData<T>, combinator: (S, T) -> R): LiveData<R> {
+    return map(combineLatest(source1, source2)) {
+        val (first, second) = it
+        combinator(first, second)
     }
 }
