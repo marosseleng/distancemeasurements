@@ -70,25 +70,30 @@
     <fragment
         android:id="@+id/about"
         android:name="com.marosseleng.distancemeasurements.ui.about.AboutFragment"
-        android:label="@string/menu_about" />
+        android:label="@string/menu_about"
+        tools:layout="@layout/fragment_about" />
 
     <fragment
         android:id="@+id/measurementDetail"
         android:name="com.marosseleng.distancemeasurements.ui.measurementdetail.MeasurementDetailFragment"
-        android:label="@string/measurement_detail_title">
+        android:label="@string/measurement_detail_title"
+        tools:layout="@layout/fragment_measurement_detail">
         <argument
             android:name="measurement"
             app:argType="com.marosseleng.distancemeasurements.data.Measurement" />
     </fragment>
     <fragment
         android:id="@+id/newBluetooth"
-        android:name="com.marosseleng.distancemeasurements.ui.newmeasurement.NewBluetoothMeasurementFragment" />
+        android:name="com.marosseleng.distancemeasurements.ui.newmeasurement.NewBluetoothMeasurementFragment"
+        tools:layout="@layout/fragment_new_bluetooth_measurement" />
     <fragment
         android:id="@+id/newRtt"
-        android:name="com.marosseleng.distancemeasurements.ui.newmeasurement.NewWifiRttMeasurementFragment" />
+        android:name="com.marosseleng.distancemeasurements.ui.newmeasurement.NewWifiRttMeasurementFragment"
+        tools:layout="@layout/fragment_new_wifi_rtt_measurement" />
     <fragment
         android:id="@+id/newRss"
-        android:name="com.marosseleng.distancemeasurements.ui.newmeasurement.NewWifiRssMeasurementFragment" />
+        android:name="com.marosseleng.distancemeasurements.ui.newmeasurement.NewWifiRssMeasurementFragment"
+        tools:layout="@layout/fragment_new_wifi_rss_measurement" />
     <action
         android:id="@+id/action_global_measurements"
         app:destination="@id/measurements" />

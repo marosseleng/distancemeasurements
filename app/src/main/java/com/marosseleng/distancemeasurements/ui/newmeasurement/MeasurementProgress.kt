@@ -21,6 +21,7 @@ package com.marosseleng.distancemeasurements.ui.newmeasurement
  */
 
 interface MeasurementFinished
+
 interface SavingFinished
 
 sealed class MeasurementProgress {

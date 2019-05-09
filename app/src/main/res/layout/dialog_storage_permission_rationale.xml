@@ -42,26 +42,26 @@
         android:id="@+id/allowStorage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:maxLines="1"
         android:paddingStart="64dp"
         android:paddingTop="16dp"
         android:paddingEnd="16dp"
         android:paddingBottom="16dp"
-        android:maxLines="1"
         android:text="@string/storage_rationale_allow"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:background="?android:selectableItemBackground"/>
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
     <TextView
         android:id="@+id/cancelStorage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:maxLines="1"
         android:paddingStart="64dp"
         android:paddingTop="16dp"
         android:paddingEnd="16dp"
         android:paddingBottom="16dp"
-        android:maxLines="1"
         android:text="@android:string/cancel"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:background="?android:selectableItemBackground" />
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
 </LinearLayout>

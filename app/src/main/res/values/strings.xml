@@ -31,15 +31,19 @@
     <string name="measurement_detail_title">Measurement detail</string>
     <string name="measurement_detail_measured_values">Measured values</string>
     <string name="measurement_detail_measured_values_empty">No measured values</string>
+    <string name="measurement_detail_measured_values_export_icon">Export measured values to a file</string>
+    <string name="measurement_detail_edit_title">Edit measurement</string>
+    <string name="measurement_detail_edit_save">Save</string>
     <string name="measurement_detail_graph">Graph</string>
     <string name="measurement_detail_graph_label_real">Real distance</string>
     <string name="measurement_detail_graph_label_measured">Measured distance</string>
     <string name="measurement_detail_graph_export_icon">Export graph to a file</string>
-    <string name="measurement_detail_graph_export_failure">Couldn\'t export a graph</string>
-    <string name="measurement_detail_graph_export_failure_retry">Try again</string>
-    <string name="measurement_detail_graph_export_success">Graph successfuly exported</string>
-    <string name="measurement_detail_graph_export_success_view">View</string>
-    <string name="measurement_detail_storage_access_denied">Can\'t export, storage access denied</string>
+    <!-- Export -->
+    <string name="measurement_detail_export_failure">Export failed</string>
+    <string name="measurement_detail_export_failure_retry">Try again</string>
+    <string name="measurement_detail_export_success">File successfully exported</string>
+    <string name="measurement_detail_export_success_view">View</string>
+    <string name="measurement_detail_export_access_denied">Can\'t export, storage access denied</string>
 
     <!-- Storage permissions rationale dialog -->
     <string name="storage_rationale_title">External storage access</string>

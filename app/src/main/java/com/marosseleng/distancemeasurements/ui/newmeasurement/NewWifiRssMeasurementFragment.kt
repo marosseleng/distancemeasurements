@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.marosseleng.distancemeasurements.R
+import com.marosseleng.distancemeasurements.data.MeasurementType
 import com.marosseleng.distancemeasurements.ui.MainActivity
 import com.marosseleng.distancemeasurements.wifiManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -60,7 +61,7 @@ class NewWifiRssMeasurementFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get()
 
-        valuesAdapter = RawMeasuredValueAdapter()
+        valuesAdapter = RawMeasuredValueAdapter(MeasurementType.RSSI)
         // TODO uncomment? => BETTER, add new items at the end of the list!!!!
 //        valuesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 //            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -127,7 +128,11 @@ class NewWifiRssMeasurementFragment : Fragment() {
                     startStop.setText(R.string.general_measurement_startstop_not_saved)
                     startStop.isEnabled = true
                     cancel.isEnabled = false
-                    Snackbar.make(bottomNavigation, R.string.general_measurement_snackbar_not_saved, Snackbar.LENGTH_SHORT)
+                    Snackbar.make(
+                        bottomNavigation,
+                        R.string.general_measurement_snackbar_not_saved,
+                        Snackbar.LENGTH_SHORT
+                    )
                         .setAnchorView(bottomNavigation)
                         .setAction(R.string.general_measurement_snackbar_not_saved_retry) {
                             viewModel.retrySave()

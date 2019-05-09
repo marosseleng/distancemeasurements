@@ -62,7 +62,8 @@ class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
     private val shouldShowRationale: Boolean by ShouldShowRationaleDelegate(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     private val exportFileName: String by lazy {
-        val dateFormatted = DateUtils.formatDateTime(application, measurement.timestamp, FORMAT_SHOW_DATE or FORMAT_SHOW_TIME)
+        val dateFormatted =
+            DateUtils.formatDateTime(application, measurement.timestamp, FORMAT_SHOW_DATE or FORMAT_SHOW_TIME)
         "${measurement.measurementType}-$dateFormatted"
     }
 
@@ -82,7 +83,7 @@ class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
         viewModel = ViewModelProviders.of(this, MeasurementDetailViewModel.Factory(measurement))
             .get(MeasurementDetailViewModel::class.java)
 
-        title.text = measurement.timestamp.toString()
+        title.text = exportFileName
 
         valuesAdapter = MeasuredValueAdapter()
 
@@ -136,15 +137,21 @@ class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
             when (it) {
                 is ExportProgress.NotStarted -> {
                     saveGraph.isEnabled = true
+                    saveValues.isEnabled = true
                 }
                 is ExportProgress.Running -> {
                     saveGraph.isEnabled = false
+                    saveValues.isEnabled = false
                 }
                 is ExportProgress.Failure -> {
                     val cause = it.cause
                     Timber.e(cause)
-                    Snackbar.make(measurementDetailContent, R.string.measurement_detail_graph_export_failure, Snackbar.LENGTH_SHORT)
-                        .setAction(R.string.measurement_detail_graph_export_failure_retry) {
+                    Snackbar.make(
+                        measurementDetailContent,
+                        R.string.measurement_detail_export_failure,
+                        Snackbar.LENGTH_SHORT
+                    )
+                        .setAction(R.string.measurement_detail_export_failure_retry) {
                             viewModel.exportBitmap(graph.chartBitmap, exportFileName)
                         }
                         .show()
@@ -152,11 +159,18 @@ class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
                 }
                 is ExportProgress.Success -> {
                     val uri = it.fileUri
-                    Snackbar.make(measurementDetailContent, R.string.measurement_detail_graph_export_success, Snackbar.LENGTH_SHORT)
-                        .setAction(R.string.measurement_detail_graph_export_success_view) {
-                            startActivity(Intent(ACTION_VIEW).setData(uri).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION))
+                    val intent = Intent(ACTION_VIEW).setData(uri).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    val snackbar = Snackbar.make(
+                        measurementDetailContent,
+                        R.string.measurement_detail_export_success,
+                        Snackbar.LENGTH_SHORT
+                    )
+                    if (intent.resolveActivity(application.packageManager) != null) {
+                        snackbar.setAction(R.string.measurement_detail_export_success_view) {
+                            startActivity(intent)
                         }
-                        .show()
+                    }
+                    snackbar.show()
                     viewModel.resetExportProgress()
                 }
             }
@@ -180,6 +194,16 @@ class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
             xAxis.setDrawGridLines(false)
             legend.form = Legend.LegendForm.LINE
             description = null
+        }
+
+        saveValues.setOnClickListener {
+            saveValues.isEnabled = false
+            if (hasExternalStoragePermission) {
+                viewModel.exportValues(exportFileName)
+            } else {
+                // TODO check rationale!
+                requestStoragePermission()
+            }
         }
 
         saveGraph.setOnClickListener {
@@ -212,7 +236,11 @@ class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
                         .apply { setTargetFragment(this@MeasurementDetailFragment, 0) }
                         .show(fm, STORAGE_PERMISSION_RATIONALE)
                 } else {
-                    Snackbar.make(measurementDetailContent, R.string.measurement_detail_storage_access_denied, Snackbar.LENGTH_SHORT)
+                    Snackbar.make(
+                        measurementDetailContent,
+                        R.string.measurement_detail_export_access_denied,
+                        Snackbar.LENGTH_SHORT
+                    )
                         .show()
                 }
             }

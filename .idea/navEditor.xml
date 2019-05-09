@@ -20,17 +20,17 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="action_global_about">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
                   <entry key="action_global_measurements">
                     <value>
                       <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="action_global_newMeasurement">
-                    <value>
-                      <LayoutPositions />
-                    </value>
-                  </entry>
-                  <entry key="action_global_thirdItem">
                     <value>
                       <LayoutPositions />
                     </value>

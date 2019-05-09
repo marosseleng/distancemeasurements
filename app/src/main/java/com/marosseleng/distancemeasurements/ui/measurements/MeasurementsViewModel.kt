@@ -22,7 +22,10 @@ import androidx.lifecycle.ViewModel
 import com.marosseleng.distancemeasurements.Application
 import com.marosseleng.distancemeasurements.data.Measurement
 import com.marosseleng.distancemeasurements.data.MeasurementType
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class MeasurementsViewModel : ViewModel(), CoroutineScope {

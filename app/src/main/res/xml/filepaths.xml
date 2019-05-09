@@ -16,5 +16,7 @@
   -->
 
 <paths>
-    <external-path name="DistanceMeasurements" path="Distancemeasurements/" />
+    <external-path
+        name="DistanceMeasurements"
+        path="Distancemeasurements/" />
 </paths>

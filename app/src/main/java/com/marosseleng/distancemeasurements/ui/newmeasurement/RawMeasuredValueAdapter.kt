@@ -20,14 +20,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.marosseleng.distancemeasurements.data.MeasuredValue
+import com.marosseleng.distancemeasurements.data.MeasurementType
 
 /**
  * @author Maroš Šeleng
  */
-class RawMeasuredValueAdapter : RecyclerView.Adapter<RawMeasuredValueAdapter.ViewHolder>() {
+class RawMeasuredValueAdapter(private val measurementType: MeasurementType) : RecyclerView.Adapter<RawMeasuredValueAdapter.ViewHolder>() {
 
     private val items = mutableListOf<Int>()
 
@@ -45,7 +44,8 @@ class RawMeasuredValueAdapter : RecyclerView.Adapter<RawMeasuredValueAdapter.Vie
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val value = items[position]
-        holder.text.text = String.format("%d. RSS: %d", items.size - position, value)
+        val format = if (measurementType == MeasurementType.RTT) "%d. %d mm" else "%d. RSS: %d"
+        holder.text.text = String.format(format, items.size - position, value)
     }
 
     fun clear() {

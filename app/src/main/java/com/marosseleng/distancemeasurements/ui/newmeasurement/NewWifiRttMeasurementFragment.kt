@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.marosseleng.distancemeasurements.R
+import com.marosseleng.distancemeasurements.data.MeasurementType
 import com.marosseleng.distancemeasurements.ui.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_new_wifi_rtt_measurement.*
@@ -70,7 +71,7 @@ class NewWifiRttMeasurementFragment : Fragment() {
             selectedBeaconDescription.text = it.SSID
         }
 
-        valuesAdapter = RawMeasuredValueAdapter()
+        valuesAdapter = RawMeasuredValueAdapter(MeasurementType.RTT)
         valuesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)

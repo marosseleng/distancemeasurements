@@ -16,12 +16,16 @@
 
 package com.marosseleng.distancemeasurements.ui.measurements
 
+import android.text.format.DateUtils
+import android.text.format.DateUtils.FORMAT_SHOW_DATE
+import android.text.format.DateUtils.FORMAT_SHOW_TIME
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.marosseleng.distancemeasurements.R
+import com.marosseleng.distancemeasurements.application
 import com.marosseleng.distancemeasurements.data.Measurement
 import kotlinx.android.synthetic.main.item_measurement.view.*
 
@@ -49,7 +53,7 @@ class MeasurementAdapter(val callback: (Measurement) -> Unit) : RecyclerView.Ada
             container.setOnClickListener {
                 callback(item)
             }
-            title.text = item.timestamp.toString()
+            title.text = DateUtils.formatDateTime(application, item.timestamp, FORMAT_SHOW_DATE or FORMAT_SHOW_TIME)
             subtitle.text = item.deviceName
             measurementType.text = item.measurementType.name
         }

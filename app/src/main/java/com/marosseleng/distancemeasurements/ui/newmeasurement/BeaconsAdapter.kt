@@ -28,7 +28,8 @@ import kotlinx.android.synthetic.main.item_beacon.view.*
 /**
  * @author Maroš Šeleng
  */
-class BeaconsAdapter(val onClickListener: (ScanResult) -> Unit) : RecyclerView.Adapter<BeaconsAdapter.BeaconViewHolder>() {
+class BeaconsAdapter(val onClickListener: (ScanResult) -> Unit) :
+    RecyclerView.Adapter<BeaconsAdapter.BeaconViewHolder>() {
 
     var beacons: List<ScanResult> = emptyList()
         set(value) {

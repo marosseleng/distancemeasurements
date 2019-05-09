@@ -20,18 +20,10 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.marosseleng.distancemeasurements.data.Dao
 import com.marosseleng.distancemeasurements.data.AppDatabase
-import com.marosseleng.distancemeasurements.data.Measurement
-import com.marosseleng.distancemeasurements.data.MeasurementType
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.not
-import org.hamcrest.MatcherAssert.assertThat
+import com.marosseleng.distancemeasurements.data.Dao
 import org.junit.After
 import org.junit.Before
-import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 
@@ -47,7 +39,8 @@ class SimpleEntityReadWriteTest {
     fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
-            context, AppDatabase::class.java).build()
+            context, AppDatabase::class.java
+        ).build()
         dao = db.dao()
     }
 

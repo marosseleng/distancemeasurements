@@ -88,7 +88,7 @@ class MeasurementDetailViewModel(private val measurement: Measurement) : ViewMod
         val inMax = realList.lastIndex
         val measuredMapped = measuredList.mapIndexed { index, fl ->
             if (measurement.measurementType == MeasurementType.RTT) {
-                Pair(index.toFloat(), fl)
+                Pair(index.toFloat(), fl / 10f)
             } else {
                 Pair(index.toFloat(), distanceComputer(fl.toInt()).toFloat())
             }
@@ -100,12 +100,15 @@ class MeasurementDetailViewModel(private val measurement: Measurement) : ViewMod
         Pair(measuredMapped, realMapped)
     }
 
-    private fun calculateDistance(signalLevelInDb: Double, freqInMHz: Double = 2400.0): Double {
+    private fun calculateDistanceMeters(signalLevelInDb: Double, freqInMHz: Double = 2400.0): Double {
         val exp = (27.55 - 20 * Math.log10(freqInMHz) + Math.abs(signalLevelInDb)) / 20.0
         return Math.pow(10.0, exp)
     }
 
-    private val distanceComputer: DistanceComputer = { (calculateDistance(it.toDouble()) * 100).toInt()  }
+    /**
+     * Centimeters
+     */
+    private val distanceComputer: DistanceComputer = { (calculateDistanceMeters(it.toDouble()) * 100).toInt() }
     // TODO livedata for statistical values
 
     init {
@@ -119,6 +122,7 @@ class MeasurementDetailViewModel(private val measurement: Measurement) : ViewMod
     }
 
     fun exportBitmap(bitmap: Bitmap, fileName: String) {
+        _exportProgress.postValue(ExportProgress.Running)
         viewModelScope.launch(Dispatchers.IO) {
             val targetDirectory = File(Environment.getExternalStorageDirectory().absolutePath + "/Distancemeasurements")
             if (!targetDirectory.exists()) {
@@ -160,6 +164,46 @@ class MeasurementDetailViewModel(private val measurement: Measurement) : ViewMod
             }
         }
     }
+
+    fun exportValues(fileName: String) {
+        _exportProgress.postValue(ExportProgress.Running)
+        viewModelScope.launch(Dispatchers.IO) {
+            val targetDirectory = File(Environment.getExternalStorageDirectory().absolutePath + "/Distancemeasurements")
+            if (!targetDirectory.exists()) {
+                if (!targetDirectory.mkdirs()) {
+                    _exportProgress.postValue(ExportProgress.Failure(IllegalStateException("Cannot create target directory for exports.")))
+                }
+            }
+            val targetFilePath = targetDirectory.absolutePath + "/" + fileName + ".csv"
+            val existingSimilarFiles = targetDirectory.listFiles { _, name ->
+                name.contains(fileName)
+            }
+
+            val targetFile: File = if (existingSimilarFiles.isNotEmpty()) {
+                // we need to find the new filename
+                val lastFileNumber = existingSimilarFiles
+                    .mapNotNull {
+                        it.nameWithoutExtension.split('_').getOrNull(1)?.toIntOrNull()
+                    }
+                    .sortedDescending()
+                    .firstOrNull() ?: 0
+
+                val nextFileNumberString = "${lastFileNumber + 1}"
+                val targetFilePath2 = "${targetDirectory.absolutePath}/${fileName}_$nextFileNumberString.csv"
+                File(targetFilePath2)
+            } else {
+                File(targetFilePath)
+            }
+            try {
+                targetFile.writeText("Timestamp, Measured value, Computed distance(cm)\n" + prepareCsvText())
+                _exportProgress.postValue(ExportProgress.Success(targetFile.toFileUri()))
+            } catch (e: Exception) {
+                _exportProgress.postValue(ExportProgress.Failure(e))
+            }
+        }
+    }
+
+    private fun prepareCsvText() = values.value?.joinToString("\n") { "${it.timestamp}, ${it.measuredValue}, ${distanceComputer(it.measuredValue)}" } ?: ""
 
     fun resetExportProgress() {
         _exportProgress.postValue(ExportProgress.NotStarted)

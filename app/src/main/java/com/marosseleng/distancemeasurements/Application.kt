@@ -18,11 +18,6 @@ package com.marosseleng.distancemeasurements
 
 import androidx.room.Room
 import com.marosseleng.distancemeasurements.data.AppDatabase
-import com.marosseleng.distancemeasurements.data.MeasuredValue
-import com.marosseleng.distancemeasurements.data.Measurement
-import com.marosseleng.distancemeasurements.data.MeasurementType
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 /**

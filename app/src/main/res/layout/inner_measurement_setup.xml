@@ -37,11 +37,11 @@
             android:id="@+id/methodIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/general_measurement_method_icon_description"
             android:src="@drawable/ic_bluetooth_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/general_measurement_method_icon_description" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/anchorDescription"

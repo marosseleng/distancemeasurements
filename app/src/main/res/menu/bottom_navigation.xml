@@ -15,18 +15,19 @@
   ~    limitations under the License.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/measurements"
-        android:title="@string/menu_measurements"
-        android:icon="@drawable/ic_history_black_24dp"/>
+        android:icon="@drawable/ic_history_black_24dp"
+        android:title="@string/menu_measurements" />
     <item
         android:id="@+id/newMeasurement"
-        android:title="@string/menu_new_measurement"
-        android:icon="@drawable/ic_add"/>
+        android:icon="@drawable/ic_add"
+        android:title="@string/menu_new_measurement" />
     <item
         android:id="@+id/about"
-        android:title="@string/menu_about"
-        android:icon="@drawable/ic_info"/>
+        android:icon="@drawable/ic_info"
+        android:title="@string/menu_about" />
 
 </menu>

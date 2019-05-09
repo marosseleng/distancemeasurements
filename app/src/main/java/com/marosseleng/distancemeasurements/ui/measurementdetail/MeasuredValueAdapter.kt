@@ -16,6 +16,7 @@
 
 package com.marosseleng.distancemeasurements.ui.measurementdetail
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,7 +51,7 @@ class MeasuredValueAdapter : RecyclerView.Adapter<MeasuredValueAdapter.ViewHolde
         val item = items[position]
 
         with(holder) {
-            title.text = item.id.toString()
+            title.text = "${position + 1}"
             val formatter = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss_SSS", Locale.US)
             time.text = formatter.format(Date(item.timestamp))
             distance.text = item.measuredValue.toString()

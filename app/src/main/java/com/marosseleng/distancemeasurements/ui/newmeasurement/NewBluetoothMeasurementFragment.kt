@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.marosseleng.distancemeasurements.R
+import com.marosseleng.distancemeasurements.data.MeasurementType
 import com.marosseleng.distancemeasurements.ui.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_new_bluetooth_measurement.*
@@ -75,7 +76,7 @@ class NewBluetoothMeasurementFragment : Fragment() {
             viewModel.selectDeviceForMeasurement(it)
             selectedBeaconDescription.text = it.device?.name
         }
-        valuesAdapter = RawMeasuredValueAdapter()
+        valuesAdapter = RawMeasuredValueAdapter(MeasurementType.BLE)
         valuesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
@@ -160,7 +161,11 @@ class NewBluetoothMeasurementFragment : Fragment() {
                     startStop.setText(R.string.general_measurement_startstop_not_saved)
                     startStop.isEnabled = true
                     cancel.isEnabled = false
-                    Snackbar.make(bottomNavigation, R.string.general_measurement_snackbar_not_saved, Snackbar.LENGTH_SHORT)
+                    Snackbar.make(
+                        bottomNavigation,
+                        R.string.general_measurement_snackbar_not_saved,
+                        Snackbar.LENGTH_SHORT
+                    )
                         .setAnchorView(bottomNavigation)
                         .setAction(R.string.general_measurement_snackbar_not_saved_retry) {
                             viewModel.retrySave()

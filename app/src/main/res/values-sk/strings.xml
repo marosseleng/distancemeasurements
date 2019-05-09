@@ -31,15 +31,19 @@
     <string name="measurement_detail_title">Detail merania</string>
     <string name="measurement_detail_measured_values">Namerané hodnoty</string>
     <string name="measurement_detail_measured_values_empty">Žiadne namerané hodnoty</string>
+    <string name="measurement_detail_measured_values_export_icon">Export hodnôt do súboru</string>
+    <string name="measurement_detail_edit_title">Upraviť meranie</string>
+    <string name="measurement_detail_edit_save">Uložiť</string>
     <string name="measurement_detail_graph">Graf</string>
     <string name="measurement_detail_graph_label_real">Skutočná vzdialenosť</string>
     <string name="measurement_detail_graph_label_measured">Nameraná vzdialenosť</string>
     <string name="measurement_detail_graph_export_icon">Export grafu do súboru</string>
-    <string name="measurement_detail_graph_export_failure">Nie je možné exportovať graf</string>
-    <string name="measurement_detail_graph_export_failure_retry">Skúsiť znovu</string>
-    <string name="measurement_detail_graph_export_success">Graf bol úspešne exportovaný</string>
-    <string name="measurement_detail_graph_export_success_view">Otvoriť</string>
-    <string name="measurement_detail_storage_access_denied">Export nie je možný pretože bol zakázaný prístup k úložisku</string>
+    <!-- Export -->
+    <string name="measurement_detail_export_failure">Nie je možné exportovať graf</string>
+    <string name="measurement_detail_export_failure_retry">Skúsiť znovu</string>
+    <string name="measurement_detail_export_success">Graf bol úspešne exportovaný</string>
+    <string name="measurement_detail_export_success_view">Otvoriť</string>
+    <string name="measurement_detail_export_access_denied">Export nie je možný pretože bol zakázaný prístup k úložisku</string>
 
     <!-- Storage permissions rationale dialog -->
     <string name="storage_rationale_title">Prístup k externému úložisku</string>
