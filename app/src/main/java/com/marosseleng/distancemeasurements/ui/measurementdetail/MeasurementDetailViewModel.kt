@@ -8,6 +8,7 @@ import androidx.lifecycle.Transformations.map
 import com.marosseleng.distancemeasurements.*
 import com.marosseleng.distancemeasurements.data.MeasuredValue
 import com.marosseleng.distancemeasurements.data.Measurement
+import com.marosseleng.distancemeasurements.data.MeasurementType
 import com.marosseleng.distancemeasurements.data.RealDistances
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -70,7 +71,11 @@ class MeasurementDetailViewModel(private val measurement: Measurement) : ViewMod
         val inMin = 0
         val inMax = realList.lastIndex
         val measuredMapped = measuredList.mapIndexed { index, fl ->
-            Pair(index.toFloat(), distanceComputer(fl.toInt()).toFloat())
+            if (measurement.measurementType == MeasurementType.RTT) {
+                Pair(index.toFloat(), fl)
+            } else {
+                Pair(index.toFloat(), distanceComputer(fl.toInt()).toFloat())
+            }
         }
         val realMapped = realList.mapIndexed { index, i ->
             val newXVal = (((index - inMin) * (outMax - outMin)) / (inMax - inMin + outMin)).toFloat()

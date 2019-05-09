@@ -75,7 +75,7 @@ class NewBluetoothMeasurementFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         val activity = activity ?: return
-        if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
+        if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
             Toast.makeText(activity, R.string.new_bluetooth_permission_denied, Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
         } else if (mBluetoothAdapter?.isEnabled == false) {

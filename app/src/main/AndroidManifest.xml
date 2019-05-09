@@ -5,7 +5,7 @@
     package="com.marosseleng.distancemeasurements">
 
     <!-- Location access -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- BLUETOOTH -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -13,9 +13,14 @@
 
     <!-- Wifi RSSI -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <!-- Chart export -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.wifi.rtt"
+        android:required="false" />
 
     <application
         android:name=".Application"

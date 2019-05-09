@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Distance measurements</string>
+
+    <!-- Bottom navigation menu -->
+    <string name="menu_measurements">Merania</string>
+    <string name="menu_new_measurement">Nové meranie</string>
+    <string name="menu_about">O aplikácii</string>
+
+    <!-- Measurements list -->
+    <string name="measurements_list_measurement_type">Druh merania</string>
+    <string name="measurements_list_measurement_type_all">Všetky</string>
+    <string name="measurements_list_measurements_empty">Zatiaľ žiadne meranie</string>
+
+    <!-- Measurement detail -->
+    <string name="measurement_detail_title">Detail merania</string>
+    <string name="measurement_detail_measured_values">Namerané hodnoty</string>
+    <string name="measurement_detail_measured_values_empty">Žiadne namerané hodnoty</string>
+    <string name="measurement_detail_graph">Graf</string>
+    <string name="measurement_detail_graph_label_real">Skutočná vzdialenosť</string>
+    <string name="measurement_detail_graph_label_measured">Nameraná vzdialenosť</string>
+    <string name="measurement_detail_graph_export_icon">Export grafu do súboru</string>
+    <string name="measurement_detail_graph_export_failure">Nie je možné exportovať graf</string>
+    <string name="measurement_detail_graph_export_failure_retry">Skúsiť znovu</string>
+    <string name="measurement_detail_graph_export_success">Graf bol úspešne exportovaný</string>
+    <string name="measurement_detail_graph_export_success_view">Otvoriť</string>
+    <string name="measurement_detail_storage_access_denied">Export nie je možný pretože bol zakázaný prístup k úložisku</string>
+
+    <!-- Storage permissions rationale dialog -->
+    <string name="storage_rationale_title">Prístup k externému úložisku</string>
+    <string name="storage_rationale_message">Pre export grafu a jeho uloženie na vašom zariadení je potrebné povoliť zapisovanie do externého úložiska.</string>
+    <string name="storage_rationale_allow">Povoliť</string>
+
+    <!-- Location permissions rationale dialog -->
+    <string name="location_rationale_title">Prístup k polohe</string>
+    <string name="location_rationale_message">Pre meranie vzdialeností je potrebné povoliť aplikácii prístup k polohe tohto zariadenia.</string>
+    <string name="location_rationale_allow">Povoliť</string>
+
+    <!-- WiFi disabled dialog -->
+    <string name="wifi_disabled_title">Vypnuté WiFi</string>
+    <string name="wifi_disabled_message">Pre meranie vzdialeností s využitím WiFi je nutné zapnúť WiFi.</string>
+    <string name="wifi_disabled_settings">Ísť do nastavení</string>
+
+    <!-- WiFi not connected dialog -->
+    <string name="wifi_not_connected_title">Nepripojené WiFi</string>
+    <string name="wifi_not_connected_message">Pre meranie vzdialeností s využitím WiFi RSS je nutné, aby bolo WiFi pripojené k sieti.</string>
+    <string name="wifi_not_connected_settings">Ísť do nastavení</string>
+
+    <!-- New measurement -->
+    <string name="new_measurement_bluetooth_le">Bluetooth LE</string>
+    <string name="new_measurement_wifi_rss">Wifi RSS</string>
+    <string name="new_measurement_wifi_rtt">Wifi RTT</string>
+    <string name="new_measurement_begin">Začať</string>
+
+    <!-- New Bluetooth measurement -->
+    <string name="new_bluetooth_select_device">Vyberte zariadenie, od ktorého sa bude merať vzdialenosť</string>
+    <string name="new_bluetooth_select_device_empty">Žiadne zariadenie v blízkosti</string>
+    <string name="new_bluetooth_permission_denied">Zakázaný prístup k polohe</string>
+    <string name="new_bluetooth_bluetooth_off">Bluetooth je vypnutý</string>
+
+    <!-- New Wifi RSS measurement -->
+    <string name="new_wifi_rss_not_connected">Uistite sa, že ste pripojený k sieti Wifi a skúste znovu.</string>
+
+    <!-- General measurement -->
+    <string name="general_measurement_method_icon_description">Ikona znázorňujúca druh merania</string>
+    <string name="general_measurement_sampling_rate_hint">Frekvencia značkovania (v milisekundách)</string>
+    <string name="general_measurement_note_hint">Poznámka</string>
+    <string name="general_measurement_real_distances_hint">Skutočné vzdialenosti (oddelené čiarkou, v poradí)</string>
+    <string name="general_measurement_startstop_start">Štart</string>
+    <string name="general_measurement_startstop_stopsave">Stop &amp; uložiť</string>
+    <string name="general_measurement_startstop_saving">Ukladanie…</string>
+    <string name="general_measurement_startstop_saved">Uložené</string>
+    <string name="general_measurement_startstop_not_saved">Neuložené</string>
+    <string name="general_measurement_cancel">Zrušiť</string>
+    <string name="general_measurement_measured_values">Namerané hodnoty</string>
+    <string name="general_measurement_measured_values_empty">Zatiaľ žiadne namerané hodnoty…</string>
+    <string name="general_measurement_snackbar_saved">Meranie bolo uložené</string>
+    <string name="general_measurement_snackbar_saved_view">Zobraziť</string>
+    <string name="general_measurement_snackbar_not_saved">Meranie nebolo uložené</string>
+    <string name="general_measurement_snackbar_not_saved_retry">Skúsiť znovu</string>
+
+</resources>

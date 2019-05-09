@@ -12,12 +12,8 @@ import java.io.File
  */
 fun PackageManager.hasBluetoothLeFeature(): Boolean = hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
 
-sealed class ScanningResult<out T> {
-    object Idle : ScanningResult<Nothing>()
-    object Loading : ScanningResult<Nothing>()
-    class Success<T> : ScanningResult<T>()
-    class Failure(val cause: Exception) : ScanningResult<Nothing>()
-}
+fun PackageManager.hasWifiRttFeature(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        && hasSystemFeature(PackageManager.FEATURE_WIFI_RTT)
 
 fun File.toFileUri(): Uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
     toUri()

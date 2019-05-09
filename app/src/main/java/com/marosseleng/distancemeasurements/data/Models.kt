@@ -58,7 +58,6 @@ data class MeasuredValue(
     @ColumnInfo(name = "timestamp")
     val timestamp: Long = System.currentTimeMillis()
 ) : Parcelable {
-    // TODO consider changing measuredValue's type to Int
     class Factory(val measuredValue: Int, private val timestamp: Long) {
         operator fun invoke(): (Long) -> MeasuredValue = { measurementId ->
             MeasuredValue(

@@ -36,7 +36,7 @@ import timber.log.Timber
 /**
  * @author Maroš Šeleng
  */
-class MeasurementDetailFragment : Fragment() {
+class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
 
     private lateinit var viewModel: MeasurementDetailViewModel
     private lateinit var valuesAdapter: MeasuredValueAdapter
@@ -74,10 +74,6 @@ class MeasurementDetailFragment : Fragment() {
 
         bindViewModel()
         setupUI()
-    }
-
-    fun requestStoragePermission() {
-        requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), EXPORT_CHART_STORAGE_PERMISSION)
     }
 
     private fun bindViewModel() {
@@ -177,9 +173,14 @@ class MeasurementDetailFragment : Fragment() {
             if (hasExternalStoragePermission) {
                 viewModel.exportBitmap(graph.chartBitmap, exportFileName)
             } else {
+                // TODO check rationale!
                 requestStoragePermission()
             }
         }
+    }
+
+    private fun requestStoragePermission() {
+        requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), EXPORT_CHART_STORAGE_PERMISSION)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -192,7 +193,10 @@ class MeasurementDetailFragment : Fragment() {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     viewModel.exportBitmap(graph.chartBitmap, exportFileName)
                 } else if (shouldShowRationale) {
-                    StoragePermissionRationaleDialogFragment().show(childFragmentManager, STORAGE_PERMISSION_RATIONALE)
+                    val fm = fragmentManager ?: return
+                    StoragePermissionRationaleDialogFragment()
+                        .apply { setTargetFragment(this@MeasurementDetailFragment, 0) }
+                        .show(fm, STORAGE_PERMISSION_RATIONALE)
                 } else {
                     Snackbar.make(measurementDetailContent, R.string.measurement_detail_storage_access_denied, Snackbar.LENGTH_SHORT)
                         .show()
@@ -202,5 +206,9 @@ class MeasurementDetailFragment : Fragment() {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults)
             }
         }
+    }
+
+    override fun onPositiveButtonClicked(requestCode: Int) {
+        requestStoragePermission()
     }
 }

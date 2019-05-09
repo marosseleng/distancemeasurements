@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- TODO selector for icons! -->
     <item
         android:id="@+id/measurements"
         android:title="@string/menu_measurements"

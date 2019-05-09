@@ -27,8 +27,23 @@
 
     <!-- Storage permissions rationale dialog -->
     <string name="storage_rationale_title">External storage access</string>
-    <string name="storage_rationale_message">In order to export the graph and save it on your device, the permission to write into you device\'s storage is required.</string>
+    <string name="storage_rationale_message">In order to export the graph and save it on your device, the permission to write into your device\'s storage is required.</string>
     <string name="storage_rationale_allow">Allow</string>
+
+    <!-- Location permissions rationale dialog -->
+    <string name="location_rationale_title">Location access</string>
+    <string name="location_rationale_message">In order to perform scans and measure the distance, the permission to access your device\'s location is required.</string>
+    <string name="location_rationale_allow">Allow</string>
+
+    <!-- WiFi disabled dialog -->
+    <string name="wifi_disabled_title">WiFi disabled</string>
+    <string name="wifi_disabled_message">In order to perform scans and measure the distance using WiFi, the WiFi needs to be turned on.</string>
+    <string name="wifi_disabled_settings">Go to settings</string>
+
+    <!-- WiFi not connected dialog -->
+    <string name="wifi_not_connected_title">WiFi not connected</string>
+    <string name="wifi_not_connected_message">In order to perform scans and measure the distance using WiFi RSS, the WiFi needs to be connected to a network.</string>
+    <string name="wifi_not_connected_settings">Go to settings</string>
 
     <!-- New measurement -->
     <string name="new_measurement_bluetooth_le">Bluetooth LE</string>

@@ -111,12 +111,12 @@ class WifiRssMeasurementViewModel : ViewModel() {
             Timber.d("==>Inside launch, thread name: %s", Thread.currentThread().name)
             while (true) {
                 // TODO get it from the UI
-                delay(1000L)
                 val info = wifiManager?.connectionInfo
                 if (info != null) {
                     Timber.d("==>Posting value %d", info.rssi)
                     singleResults.postValue(MeasuredValue.Factory(info.rssi, System.currentTimeMillis()))
                 }
+                delay(1000L)
             }
         }
     }
