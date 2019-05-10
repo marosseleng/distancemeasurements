@@ -20,6 +20,7 @@
     <!-- Bottom navigation menu -->
     <string name="menu_measurements">Measurements</string>
     <string name="menu_new_measurement">New measurement</string>
+    <string name="menu_positioning">Positioning</string>
     <string name="menu_about">About</string>
 
     <!-- Measurements list -->

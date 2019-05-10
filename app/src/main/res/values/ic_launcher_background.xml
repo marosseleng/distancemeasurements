@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright 2019 Maroš Šeleng
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,5 +16,5 @@
   -->
 
 <resources>
-    <color name="ic_launcher_background">#455A64</color>
+    <color name="ic_launcher_background">#00ACC1</color>
 </resources>

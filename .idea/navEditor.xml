@@ -13,8 +13,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-451" />
-                            <option name="y" value="192" />
+                            <option name="x" value="-448" />
+                            <option name="y" value="118" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -31,6 +31,11 @@
                     </value>
                   </entry>
                   <entry key="action_global_newMeasurement">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="action_global_positioningFragment">
                     <value>
                       <LayoutPositions />
                     </value>
@@ -142,6 +147,18 @@
                           <Point>
                             <option name="x" value="-162" />
                             <option name="y" value="-151" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="positioningFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-448" />
+                            <option name="y" value="430" />
                           </Point>
                         </option>
                       </LayoutPositions>

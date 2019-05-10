@@ -74,6 +74,12 @@
         tools:layout="@layout/fragment_about" />
 
     <fragment
+        android:id="@+id/positioning"
+        android:name="com.marosseleng.distancemeasurements.ui.positioning.PositioningFragment"
+        android:label="@string/menu_positioning"
+        tools:layout="@layout/fragment_positioning" />
+
+    <fragment
         android:id="@+id/measurementDetail"
         android:name="com.marosseleng.distancemeasurements.ui.measurementdetail.MeasurementDetailFragment"
         android:label="@string/measurement_detail_title"
@@ -103,5 +109,8 @@
     <action
         android:id="@+id/action_global_about"
         app:destination="@id/about" />
+    <action
+        android:id="@+id/action_global_positioningFragment"
+        app:destination="@id/positioning" />
 
 </navigation>

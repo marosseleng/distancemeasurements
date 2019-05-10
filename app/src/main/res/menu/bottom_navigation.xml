@@ -26,6 +26,10 @@
         android:icon="@drawable/ic_add"
         android:title="@string/menu_new_measurement" />
     <item
+        android:id="@+id/positioning"
+        android:icon="@drawable/ic_person_pin"
+        android:title="@string/menu_positioning" />
+    <item
         android:id="@+id/about"
         android:icon="@drawable/ic_info"
         android:title="@string/menu_about" />

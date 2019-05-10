@@ -51,7 +51,8 @@ class MainActivity : AppCompatActivity() {
 
         // TODO add toolbar
 //        setupActionBarWithNavController(navHost, AppBarConfiguration(navHost.graph))
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.measurements, R.id.newMeasurement, R.id.about))
+        appBarConfiguration =
+            AppBarConfiguration(setOf(R.id.measurements, R.id.newMeasurement, R.id.positioning, R.id.about))
         setupActionBarWithNavController(navHost, appBarConfiguration)
     }
 

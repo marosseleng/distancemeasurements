@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 Maroš Šeleng
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,13 +14,7 @@
   ~    limitations under the License.
   -->
 
-<resources>
-    <color name="primaryColor">#00acc1</color>
-    <color name="primaryLightColor">#5ddef4</color>
-    <color name="primaryDarkColor">#007c91</color>
-    <color name="secondaryColor">#6d4c41</color>
-    <color name="secondaryLightColor">#9c786c</color>
-    <color name="secondaryDarkColor">#40241a</color>
-    <color name="primaryTextColor">#000000</color>
-    <color name="secondaryTextColor">#ffffff</color>
-</resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_baseline_person_pin_circle_24px" android:state_selected="true" />
+    <item android:drawable="@drawable/ic_outline_person_pin_circle_24px" android:state_selected="false" />
+</selector>

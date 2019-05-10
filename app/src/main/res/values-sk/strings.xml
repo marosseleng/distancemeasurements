@@ -20,6 +20,7 @@
     <!-- Bottom navigation menu -->
     <string name="menu_measurements">Merania</string>
     <string name="menu_new_measurement">Nové meranie</string>
+    <string name="menu_positioning">Polohovanie</string>
     <string name="menu_about">O aplikácii</string>
 
     <!-- Measurements list -->
