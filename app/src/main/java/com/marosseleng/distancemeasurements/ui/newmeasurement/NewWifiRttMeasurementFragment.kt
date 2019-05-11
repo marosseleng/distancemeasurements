@@ -133,9 +133,6 @@ class NewWifiRttMeasurementFragment : Fragment() {
                                 }
                             }
                         })
-                        .setAction(R.string.general_measurement_snackbar_saved_view) {
-
-                        }
                         .show()
 
                 }
