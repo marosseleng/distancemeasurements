@@ -46,6 +46,10 @@ import timber.log.Timber
 @RequiresApi(Build.VERSION_CODES.P)
 class WifiRttMeasurementViewModel : ViewModel() {
 
+    private companion object {
+        const val DEFAULT_SAMPLING_RATE = 100L
+    }
+
     private val _availableAps = MutableLiveData<List<ScanResult>>()
     val availableAps: LiveData<List<ScanResult>>
         get() = _availableAps
@@ -61,7 +65,6 @@ class WifiRttMeasurementViewModel : ViewModel() {
 
     private var scanResultsRefreshJob: Job? = viewModelScope.launch(Dispatchers.IO) {
         while (true) {
-            Timber.d("==>Inside while, after Delay, thred: %s", Thread.currentThread().name)
             val results = wifiManager?.scanResults?.filter { it.is80211mcResponder } ?: emptyList()
             _availableAps.postValue(results)
             delay(30_000L)
@@ -71,7 +74,10 @@ class WifiRttMeasurementViewModel : ViewModel() {
 
     private var selectedDevice: MeasurementAnchorDevice? = null
     private var rangingRequest: RangingRequest? = null
-    private var samplingRate: Long = 1000L
+    var samplingRateMillis: Long = 1000L
+        set(value) {
+            field = if (value < 0) DEFAULT_SAMPLING_RATE else value
+        }
 
     private val rangingCallback = object : RangingResultCallback() {
         override fun onRangingResults(results: MutableList<RangingResult>) {
@@ -80,11 +86,10 @@ class WifiRttMeasurementViewModel : ViewModel() {
             if (result.status == STATUS_SUCCESS) {
                 singleResults.postValue(MeasuredValue.Factory(result.distanceMm, System.currentTimeMillis()))
             }
-            Timber.d("==>onRangingResults: %s", results.joinToString("\n"))
         }
 
         override fun onRangingFailure(code: Int) {
-            Timber.d("==onRangingFailure: %d", code)
+            Timber.w("==onRangingFailure: %d", code)
         }
     }
 
@@ -114,12 +119,8 @@ class WifiRttMeasurementViewModel : ViewModel() {
     }
 
     fun setSelectedDevice(scanResult: ScanResult) {
-        selectedDevice = scanResult.tiMeasurementAnchorDevice()
+        selectedDevice = scanResult.toMeasurementAnchorDevice()
         rangingRequest = scanResult.toRangingRequest()
-    }
-
-    fun setSamplingRate(rate: Long) {
-        samplingRate = rate
     }
 
     private fun startMeasurement() {
@@ -153,7 +154,7 @@ class WifiRttMeasurementViewModel : ViewModel() {
                 } else {
                     // TODO handle permission rejection
                 }
-                delay(samplingRate)
+                delay(samplingRateMillis)
             }
         }
     }
@@ -172,7 +173,8 @@ class WifiRttMeasurementViewModel : ViewModel() {
             frequency = selectedDevice?.deviceFrequency ?: 2401
         )
         viewModelScope.launch(CoroutineExceptionHandler { _, throwable ->
-            _measurementProgress.postValue(MeasurementProgress.NotStarted)
+            Timber.e(throwable)
+            _measurementProgress.postValue(MeasurementProgress.NotSaved)
         }) {
             val measurementId = withContext(Dispatchers.IO) {
                 dao.insertMeasurement(measurement)
@@ -199,14 +201,4 @@ class WifiRttMeasurementViewModel : ViewModel() {
             selectedDevice = selectedDevice?.copy(address = macAddress.toString())
         }
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.P)
-fun ScanResult.toRangingRequest(): RangingRequest = RangingRequest.Builder().run {
-    addAccessPoint(this@toRangingRequest)
-    build()
-}
-
-fun ScanResult.tiMeasurementAnchorDevice(): MeasurementAnchorDevice {
-    return MeasurementAnchorDevice(name = SSID, address = "NOT SET", deviceFrequency = frequency)
 }

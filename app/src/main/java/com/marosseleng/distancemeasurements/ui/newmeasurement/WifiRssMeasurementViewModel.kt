@@ -22,7 +22,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.NetworkInfo
-import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiManager.EXTRA_NETWORK_INFO
 import androidx.lifecycle.LiveData
@@ -42,6 +41,10 @@ import timber.log.Timber
  */
 class WifiRssMeasurementViewModel : ViewModel() {
 
+    private companion object {
+        const val DEFAULT_SAMPLING_RATE = 100L
+    }
+
     private val _measurementProgress = startWith<MeasurementProgress>(MeasurementProgress.NotStarted)
     val measurementInProgress: LiveData<MeasurementProgress>
         get() = _measurementProgress
@@ -50,6 +53,12 @@ class WifiRssMeasurementViewModel : ViewModel() {
     val measuredValues = accumulateFromStart(emitWhile(singleResults) {
         _measurementProgress.value is MeasurementProgress.Started
     })
+
+    var samplingRateMillis: Long = DEFAULT_SAMPLING_RATE
+        set(value) {
+            Timber.d("==>samplingRateMillis = %s", value)
+            field = if (value < 0) DEFAULT_SAMPLING_RATE else value
+        }
 
     private var measurementJob: Job? = null
 
@@ -62,9 +71,7 @@ class WifiRssMeasurementViewModel : ViewModel() {
         if (_measurementProgress.value is MeasurementProgress.Started) {
         }
         _measurementProgress.postValue(MeasurementProgress.NotStarted)
-        Timber.d("==>cancel()")
         stopScan()
-        Timber.d("==>Job cancelled")
         selectedDevice = null
     }
 
@@ -100,23 +107,17 @@ class WifiRssMeasurementViewModel : ViewModel() {
      * part of the public API
      */
     private fun startScan() {
-        Timber.d("==>Registering Wifi receiver")
         if (wifiReceiver == null) {
             wifiReceiver = WifiReceiver()
             application.registerReceiver(wifiReceiver, IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION))
-            Timber.d("==>Registered Wifi receiver")
         } else {
-            Timber.w("==>wifiReceiver is not null, is this weird? how did this happen?")
+            Timber.w("wifiReceiver is not null, is this weird? how did this happen?")
         }
 
-        Timber.d("==>Saving measurement anchor device…")
         selectedDevice = wifiManager?.connectionInfo?.toMeasurementAnchorDevice()
-        Timber.d("==>Anchor device saved: %s", selectedDevice)
 
-        Timber.d("==>startMeasuring()")
         val job = measurementJob
         if (job != null) {
-            Timber.d("==>job != null")
             if (job.isActive) {
                 job.cancel()
             }
@@ -124,15 +125,12 @@ class WifiRssMeasurementViewModel : ViewModel() {
             throw IllegalStateException("Job is nn.")
         }
         measurementJob = viewModelScope.launch(Dispatchers.IO) {
-            Timber.d("==>Inside launch, thread name: %s", Thread.currentThread().name)
             while (true) {
-                // TODO get it from the UI
                 val info = wifiManager?.connectionInfo
                 if (info != null) {
-                    Timber.d("==>Posting value %d", info.rssi)
                     singleResults.postValue(MeasuredValue.Factory(info.rssi, System.currentTimeMillis()))
                 }
-                delay(1000L)
+                delay(samplingRateMillis)
             }
         }
     }
@@ -151,7 +149,8 @@ class WifiRssMeasurementViewModel : ViewModel() {
             frequency = selectedDevice?.deviceFrequency ?: 2401
         )
         viewModelScope.launch(CoroutineExceptionHandler { _, throwable ->
-            _measurementProgress.postValue(MeasurementProgress.NotStarted)
+            Timber.e(throwable)
+            _measurementProgress.postValue(MeasurementProgress.NotSaved)
         }) {
             val measurementId = withContext(Dispatchers.IO) {
                 dao.insertMeasurement(measurement)
@@ -192,18 +191,9 @@ class WifiRssMeasurementViewModel : ViewModel() {
                     newNetworkInfo
                 )
                 cancelClicked()
-                // TODO halt measuring!!
             } else {
 
             }
         }
     }
-}
-
-@SuppressLint("HardwareIds")
-private fun WifiInfo?.toMeasurementAnchorDevice(): MeasurementAnchorDevice? {
-    if (this == null) {
-        return null
-    }
-    return MeasurementAnchorDevice(name = ssid, address = macAddress, deviceFrequency = frequency)
 }

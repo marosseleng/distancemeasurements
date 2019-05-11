@@ -16,11 +16,17 @@
 
 package com.marosseleng.distancemeasurements
 
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.net.wifi.ScanResult
+import android.net.wifi.WifiInfo
+import android.net.wifi.rtt.RangingRequest
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
+import com.marosseleng.distancemeasurements.data.MeasurementAnchorDevice
 import java.io.File
 
 /**
@@ -35,6 +41,24 @@ fun File.toFileUri(): Uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
     toUri()
 } else {
     FileProvider.getUriForFile(application, application.packageName + ".fileprovider", this)
+}
+
+@SuppressLint("HardwareIds")
+fun WifiInfo?.toMeasurementAnchorDevice(): MeasurementAnchorDevice? {
+    if (this == null) {
+        return null
+    }
+    return MeasurementAnchorDevice(name = ssid, address = macAddress, deviceFrequency = frequency)
+}
+
+@RequiresApi(Build.VERSION_CODES.P)
+fun ScanResult.toRangingRequest(): RangingRequest = RangingRequest.Builder().run {
+    addAccessPoint(this@toRangingRequest)
+    build()
+}
+
+fun ScanResult.toMeasurementAnchorDevice(): MeasurementAnchorDevice {
+    return MeasurementAnchorDevice(name = SSID, address = "NOT SET", deviceFrequency = frequency)
 }
 
 /*

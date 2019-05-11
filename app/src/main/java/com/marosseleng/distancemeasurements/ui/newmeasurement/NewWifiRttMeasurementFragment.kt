@@ -16,9 +16,9 @@
 
 package com.marosseleng.distancemeasurements.ui.newmeasurement
 
-import android.net.wifi.ScanResult
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,13 +34,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.marosseleng.distancemeasurements.ImplementedTextWatcher
 import com.marosseleng.distancemeasurements.R
 import com.marosseleng.distancemeasurements.data.MeasurementType
 import com.marosseleng.distancemeasurements.ui.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_new_wifi_rtt_measurement.*
 import kotlinx.android.synthetic.main.inner_measurement_setup.*
-import kotlinx.android.synthetic.main.item_beacon.view.*
 
 /**
  * @author Maroš Šeleng
@@ -168,47 +168,20 @@ class NewWifiRttMeasurementFragment : Fragment() {
             adapter = valuesAdapter
             addItemDecoration(DividerItemDecoration(activity, RecyclerView.VERTICAL))
         }
+        samplingRate.editText?.addTextChangedListener(object : ImplementedTextWatcher() {
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.samplingRateMillis = s?.toString()?.toLongOrNull() ?: -1
+            }
+        })
         cancel.setOnClickListener {
             devicesWrapper.isVisible = true
             measurementWrapper.isVisible = false
             valuesAdapter.clear()
             viewModel.cancelClicked()
         }
-
         startStop.setOnClickListener {
             startStop.isEnabled = false
-            // TODO grab sampling rate!
             viewModel.startStopClicked()
         }
-    }
-}
-
-class RttApAdapter(val onClickListener: (ScanResult) -> Unit) : RecyclerView.Adapter<RttApAdapter.ViewHolder>() {
-
-    var aps: List<ScanResult> = emptyList()
-        set(value) {
-            field = value.sortedBy { it.SSID }
-            notifyDataSetChanged()
-        }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_beacon, parent, false)
-        )
-    }
-
-    override fun getItemCount() = aps.size
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val ap = aps[position]
-        with(holder) {
-            container.setOnClickListener { onClickListener(ap) }
-            title.text = ap.SSID
-        }
-    }
-
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val container: View = itemView.container
-        val title: TextView = itemView.anchorDescription
     }
 }

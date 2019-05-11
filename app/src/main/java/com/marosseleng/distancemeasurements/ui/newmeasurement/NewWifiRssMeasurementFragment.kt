@@ -17,6 +17,7 @@
 package com.marosseleng.distancemeasurements.ui.newmeasurement
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.marosseleng.distancemeasurements.ImplementedTextWatcher
 import com.marosseleng.distancemeasurements.R
 import com.marosseleng.distancemeasurements.data.MeasurementType
 import com.marosseleng.distancemeasurements.ui.MainActivity
@@ -62,13 +64,6 @@ class NewWifiRssMeasurementFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get()
 
         valuesAdapter = RawMeasuredValueAdapter(MeasurementType.RSSI)
-        // TODO uncomment? => BETTER, add new items at the end of the list!!!!
-//        valuesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-//            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-//                super.onItemRangeInserted(positionStart, itemCount)
-//                valueList.smoothScrollToPosition(0)
-//            }
-//        })
 
         bindViewModel()
         setupUi()
@@ -147,6 +142,11 @@ class NewWifiRssMeasurementFragment : Fragment() {
     private fun setupUi() {
         valueList.adapter = valuesAdapter
         valueList.addItemDecoration(DividerItemDecoration(activity, RecyclerView.VERTICAL))
+        samplingRate.editText?.addTextChangedListener(object : ImplementedTextWatcher() {
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.samplingRateMillis = s?.toString()?.toLongOrNull() ?: -1
+            }
+        })
         cancel.setOnClickListener {
             viewModel.cancelClicked()
             findNavController().navigateUp()

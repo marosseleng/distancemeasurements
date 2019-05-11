@@ -14,23 +14,9 @@
  *    limitations under the License.
  */
 
-package com.marosseleng.distancemeasurements.view
-
-import android.content.Context
-import android.graphics.Canvas
-import android.util.AttributeSet
-import android.view.View
-import timber.log.Timber
+package com.marosseleng.distancemeasurements.ui.positioning
 
 /**
  * @author Maroš Šeleng
  */
-class PositioningView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
-
-    override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
-        Timber.d("onDraw at %d", System.currentTimeMillis() % 1000)
-    }
-}
+data class ApInSpace(val name: String?, val macAddress: String, val position: Pair<Int, Int>)

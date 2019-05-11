@@ -22,6 +22,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +38,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.marosseleng.distancemeasurements.ImplementedTextWatcher
 import com.marosseleng.distancemeasurements.R
 import com.marosseleng.distancemeasurements.data.MeasurementType
 import com.marosseleng.distancemeasurements.ui.MainActivity
@@ -186,16 +188,19 @@ class NewBluetoothMeasurementFragment : Fragment() {
             adapter = valuesAdapter
             addItemDecoration(DividerItemDecoration(activity, RecyclerView.VERTICAL))
         }
+        samplingRate.editText?.addTextChangedListener(object : ImplementedTextWatcher() {
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.samplingRateMillis = s?.toString()?.toLongOrNull() ?: -1
+            }
+        })
         cancel.setOnClickListener {
             devicesWrapper.isVisible = true
             measurementWrapper.isVisible = false
             valuesAdapter.clear()
             viewModel.cancelClicked()
         }
-
         startStop.setOnClickListener {
             startStop.isEnabled = false
-            // TODO grab sampling rate!
             viewModel.startStopClicked()
         }
     }

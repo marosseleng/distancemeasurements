@@ -45,6 +45,10 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 class BluetoothMeasurementViewModel : ViewModel() {
 
+    private companion object {
+        const val DEFAULT_SAMPLING_RATE = 100L
+    }
+
     private val singleResults = MutableLiveData<ScanResult>()
 
     // emitting lists of results
@@ -64,6 +68,11 @@ class BluetoothMeasurementViewModel : ViewModel() {
         get() = _measurementProgress
 
     private var selectedDevice: ScanResult? = null
+    var samplingRateMillis: Long = DEFAULT_SAMPLING_RATE
+        set(value) {
+            field = if (value < 0) DEFAULT_SAMPLING_RATE else value
+        }
+    private var lastScanPostedMillis = 0L
 
     val measuredValues = accumulateFromStart(emitWhile(map(singleResults, ScanResult::toMeasuredValueFactory)) {
         selectedDevice != null && _measurementProgress.value is MeasurementProgress.Started
@@ -76,20 +85,21 @@ class BluetoothMeasurementViewModel : ViewModel() {
 
     private val scanCallback: ScanCallback = object : ScanCallback() {
         override fun onScanFailed(errorCode: Int) {
-            Timber.d("onScanFailed: $errorCode")
+            Timber.w("onScanFailed: $errorCode")
         }
 
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            // TODO create MeasuredValue here!!
             if (result == null) {
                 return
             }
-            singleResults.postValue(result)
+            val current = System.currentTimeMillis()
+            if ((current - lastScanPostedMillis) >= samplingRateMillis) {
+                singleResults.postValue(result)
+                lastScanPostedMillis = current
+            }
         }
 
         override fun onBatchScanResults(results: MutableList<ScanResult>?) {
-            Timber.d("onBatchScanResults: $results")
-            // TODO create MeasuredValue here!!
             results?.forEach {
                 singleResults.postValue(it)
             }
@@ -111,13 +121,14 @@ class BluetoothMeasurementViewModel : ViewModel() {
                         .build()
                 )
             }
+            lastScanPostedMillis = 0L
             mBluetoothAdapter?.bluetoothLeScanner?.startScan(
                 scanFilters,
                 ScanSettings.Builder().build(),
                 scanCallback
             )
         } else {
-            Timber.e("Scan already in progress. WTF?")
+            Timber.e("Scan already in progress")
         }
     }
 
@@ -127,6 +138,7 @@ class BluetoothMeasurementViewModel : ViewModel() {
     fun stopScan() {
         if (isScanning.getAndSet(false)) {
             mBluetoothAdapter?.bluetoothLeScanner?.stopScan(scanCallback)
+            lastScanPostedMillis = 0L
         } else {
             Timber.e("Can't stop the scan. Scan is not running.")
         }
