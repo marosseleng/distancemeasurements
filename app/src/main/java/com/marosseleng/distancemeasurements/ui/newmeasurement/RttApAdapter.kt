@@ -20,9 +20,12 @@ import android.net.wifi.ScanResult
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.marosseleng.distancemeasurements.R
+import com.marosseleng.distancemeasurements.application
 import kotlinx.android.synthetic.main.item_beacon.view.*
 
 /**
@@ -44,17 +47,18 @@ class RttApAdapter(val onClickListener: (ScanResult) -> Unit) : RecyclerView.Ada
 
     override fun getItemCount() = aps.size
 
-    // TODO icon!!!
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val ap = aps[position]
         with(holder) {
             container.setOnClickListener { onClickListener(ap) }
             title.text = ap.SSID
+            methodIcon.setImageDrawable(ContextCompat.getDrawable(application, R.drawable.ic_wifi_black_24dp))
         }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val container: View = itemView.container
         val title: TextView = itemView.anchorDescription
+        val methodIcon: ImageView = itemView.methodIcon
     }
 }
