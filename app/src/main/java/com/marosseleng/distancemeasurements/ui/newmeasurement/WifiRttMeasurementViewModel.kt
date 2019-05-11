@@ -98,9 +98,7 @@ class WifiRttMeasurementViewModel : ViewModel() {
         if (_measurementProgress.value is MeasurementProgress.Started) {
         }
         _measurementProgress.postValue(MeasurementProgress.NotStarted)
-        Timber.d("==>cancel()")
         stopScan()
-        Timber.d("==>Job cancelled")
         selectedDevice = null
     }
 

@@ -56,7 +56,6 @@ class WifiRssMeasurementViewModel : ViewModel() {
 
     var samplingRateMillis: Long = DEFAULT_SAMPLING_RATE
         set(value) {
-            Timber.d("==>samplingRateMillis = %s", value)
             field = if (value < 0) DEFAULT_SAMPLING_RATE else value
         }
 
@@ -181,12 +180,12 @@ class WifiRssMeasurementViewModel : ViewModel() {
             val newNetworkInfo = intent?.getParcelableExtra<NetworkInfo>(EXTRA_NETWORK_INFO)
             val newConnInfo = wifiManager?.connectionInfo
             if (selectedDevice == null) {
-                Timber.w("==>Network state changed, but the selected device is null so doing nothing.")
+                Timber.w("Network state changed, but the selected device is null so doing nothing.")
                 return
             }
             if (selectedDevice?.name != newConnInfo?.ssid || selectedDevice?.address != newConnInfo?.macAddress) {
                 Timber.e(
-                    "==>Network state changed!\nNew connection info: %s\nNew network info:%s",
+                    "Network state changed!\nNew connection info: %s\nNew network info:%s",
                     newConnInfo,
                     newNetworkInfo
                 )

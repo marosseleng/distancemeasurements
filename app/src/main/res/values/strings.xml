@@ -99,6 +99,15 @@
     <string name="general_measurement_snackbar_not_saved">Measurement not saved</string>
     <string name="general_measurement_snackbar_not_saved_retry">Retry</string>
 
+    <!-- Positioning -->
+    <string name="positioning_add_aps">Add APs for positioning</string>
+    <string name="positioning_address">MAC address</string>
+    <string name="positioning_name">Device name (optional)</string>
+    <string name="positioning_x">Position x (cm)</string>
+    <string name="positioning_y">Position y (cm)</string>
+    <string name="positioning_add">Add</string>
+    <string name="positioning_done">Done</string>
+
     <!-- About -->
     <string name="about_source_explanation">This application was developed as a part of Diploma thesis at the Faculty of informatics, Masaryk university, Brno, Czechia.</string>
     <string name="about_libraries">List of used open source libraries</string>

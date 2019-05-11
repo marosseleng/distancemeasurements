@@ -16,7 +16,11 @@
 
 package com.marosseleng.distancemeasurements.ui.positioning
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * @author Maroš Šeleng
  */
-data class ApInSpace(val name: String?, val macAddress: String, val position: Pair<Int, Int>)
+@Parcelize
+data class ApInSpace(val name: String?, val macAddress: String, val position: Pair<Int, Int>) : Parcelable

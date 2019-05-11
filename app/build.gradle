@@ -78,12 +78,12 @@ dependencies {
     // Plotting
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    // Trilateration
+    implementation 'com.lemmingapex.trilateration:trilateration:1.0.2'
+
     // Tests
     testImplementation 'androidx.room:room-testing:2.1.0-beta01'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-
-    // Trilateration
-    implementation 'com.lemmingapex.trilateration:trilateration:1.0.2'
 }

@@ -54,6 +54,7 @@ class AboutFragment : Fragment() {
             "androidx.navigation:navigation-ui-ktx",
             "com.jakewharton.timber:timber",
             "com.github.PhilJay:MPAndroidChart",
+            "com.lemmingapex.trilateration:trilateration:1.0.2",
             "androidx.room:room-testing",
             "junit:junit",
             "androidx.test.ext:junit",

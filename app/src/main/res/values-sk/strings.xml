@@ -99,6 +99,15 @@
     <string name="general_measurement_snackbar_not_saved">Meranie nebolo uložené</string>
     <string name="general_measurement_snackbar_not_saved_retry">Skúsiť znovu</string>
 
+    <!-- Positioning -->
+    <string name="positioning_add_aps">Pridať AP pre polohovanie</string>
+    <string name="positioning_address">MAC adresa</string>
+    <string name="positioning_name">Meno AP (nepovinné)</string>
+    <string name="positioning_x">Pozícia x (cm)</string>
+    <string name="positioning_y">Pozícia y (cm)</string>
+    <string name="positioning_add">Pridať</string>
+    <string name="positioning_done">Hotovo</string>
+
     <!-- About -->
     <string name="about_source_explanation">Táto aplikácia bola vytvorená ako súčasť diplomovej práce na Fakulte informatiky Masarykovej univerzity v Brne.</string>
     <string name="about_libraries">Zoznam použitých open source knižníc</string>

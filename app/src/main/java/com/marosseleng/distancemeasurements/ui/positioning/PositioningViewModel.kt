@@ -62,7 +62,7 @@ class PositioningViewModel : ViewModel() {
         }
 
         override fun onRangingFailure(code: Int) {
-            Timber.e("==>onRangingFailure: %d", code)
+            Timber.e("onRangingFailure: %d", code)
         }
     }
 
@@ -113,45 +113,4 @@ class PositioningViewModel : ViewModel() {
         super.onCleared()
         stopScan()
     }
-//
-//    private fun getKalmanFilter(macAddress: String, initialValue: Int): KalmanFilter? {
-//        synchronized(filtersLock) {
-//            if (kalmanFilters[macAddress] == null) {
-//                val (kf, h) = createKalmanFilter(initialValue)
-//                kalmanFilters[macAddress] = kf
-//                if (kalmanFilters_H[macAddress] == null) {
-//                    kalmanFilters_H[macAddress] = h
-//                }
-//            }
-//        }
-//
-//        return kalmanFilters[macAddress]
-//    }
-//
-//    private fun createKalmanFilter(initialValue: Int): Pair<KalmanFilter, RealMatrix> {
-////        val measurementNoise = 0.1
-////        val processNoise = 1e-5
-//
-//        // A = [ 1 ]
-//        val A = Array2DRowRealMatrix(doubleArrayOf(1.0))
-//        // B = null
-//        val B: RealMatrix? = null
-//        // H = [ 1 ]
-//        val H = Array2DRowRealMatrix(doubleArrayOf(1.0))
-//        // x = [ 10 ]
-//        var x: RealVector = ArrayRealVector(doubleArrayOf(initialValue.toDouble()))
-//        // Q = [ 1e-5 ]
-//        val Q = Array2DRowRealMatrix(doubleArrayOf(1.0))
-////        val Q: RealMatrix? = null
-//        // P = [ 1 ]
-//        val P0 = Array2DRowRealMatrix(doubleArrayOf(1.0))
-//        // R = [ 0.1 ]
-//        val R = Array2DRowRealMatrix(doubleArrayOf(1.0))
-////        val R: RealMatrix? = null
-//
-//        val pm = DefaultProcessModel(A, B, Q, x, P0)
-//        val mm = DefaultMeasurementModel(H, R)
-//
-//        return Pair(KalmanFilter(pm, mm), H)
-//    }
 }

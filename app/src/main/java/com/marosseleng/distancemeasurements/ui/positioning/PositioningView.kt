@@ -31,17 +31,10 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver
 import com.lemmingapex.trilateration.TrilaterationFunction
-import org.apache.commons.math3.filter.DefaultMeasurementModel
-import org.apache.commons.math3.filter.DefaultProcessModel
-import org.apache.commons.math3.filter.KalmanFilter
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer
-import org.apache.commons.math3.linear.Array2DRowRealMatrix
-import org.apache.commons.math3.linear.ArrayRealVector
-import org.apache.commons.math3.linear.RealMatrix
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-
 
 /**
  * @author Maroš Šeleng
@@ -74,28 +67,17 @@ class PositioningView @JvmOverloads constructor(
                 dst.add(distance.toDouble())
             }
 
-            // TODO offload to the background thread
-            val solver =
-                NonLinearLeastSquaresSolver(
-                    TrilaterationFunction(positions.toTypedArray(), dst.toDoubleArray()),
-                    LevenbergMarquardtOptimizer()
-                )
-            val optimum = solver.solve()
+            if (positions.size >= 2) {
+                val solver =
+                    NonLinearLeastSquaresSolver(
+                        TrilaterationFunction(positions.toTypedArray(), dst.toDoubleArray()),
+                        LevenbergMarquardtOptimizer()
+                    )
+                val optimum = solver.solve()
 
-            val pointVector = optimum.point.toArray()
-            val triangulatedPos = pointVector[0].toInt() to pointVector[1].toInt()
-
-            kalmanFilterX.predict()
-            var z = kalmanHx.operate(doubleArrayOf(triangulatedPos.first.toDouble()))
-            kalmanFilterX.correct(z)
-            val correctedX = kalmanFilterX.stateEstimation[0].toInt()
-
-            kalmanFilterY.predict()
-            z = kalmanHy.operate(doubleArrayOf(triangulatedPos.second.toDouble()))
-            kalmanFilterY.correct(z)
-            val correctedY = kalmanFilterY.stateEstimation[0].toInt()
-
-            myPositionCm = correctedX to correctedY
+                val pointVector = optimum.point.toArray()
+                myPositionCm = pointVector[0].toInt() to pointVector[1].toInt()
+            }
 
             invalidate()
         }
@@ -106,61 +88,6 @@ class PositioningView @JvmOverloads constructor(
     private var maxY = height - 1
     private var cmToPxRatio = 1f
     private var myPositionCm: Pair<Int, Int> = Pair(0, 0)
-
-    private lateinit var kalmanHx: RealMatrix
-    private lateinit var kalmanHy: RealMatrix
-
-    private val kalmanFilterX: KalmanFilter by lazy {
-        val constantVoltage = 0.0
-        val measurementNoise = 0.1
-        val processNoise = 1e-5
-
-        // A = [ 1 ]
-        val A = Array2DRowRealMatrix(doubleArrayOf(1.0))
-        // B = null
-        val B: RealMatrix? = null
-        // H = [ 1 ]
-        val H = Array2DRowRealMatrix(doubleArrayOf(1.0))
-        kalmanHx = H
-        // x = [ 10 ]
-        val x = ArrayRealVector(doubleArrayOf(constantVoltage))
-        // Q = [ 1e-5 ]
-        val Q = Array2DRowRealMatrix(doubleArrayOf(processNoise))
-        // P = [ 1 ]
-        val P0 = Array2DRowRealMatrix(doubleArrayOf(1.0))
-        // R = [ 0.1 ]
-        val R = Array2DRowRealMatrix(doubleArrayOf(measurementNoise))
-
-        val pm = DefaultProcessModel(A, B, Q, x, P0)
-        val mm = DefaultMeasurementModel(H, R)
-        KalmanFilter(pm, mm)
-    }
-
-    private val kalmanFilterY: KalmanFilter by lazy {
-        val constantVoltage = 0.0
-        val measurementNoise = 0.1
-        val processNoise = 1e-5
-
-        // A = [ 1 ]
-        val A = Array2DRowRealMatrix(doubleArrayOf(1.0))
-        // B = null
-        val B: RealMatrix? = null
-        // H = [ 1 ]
-        val H = Array2DRowRealMatrix(doubleArrayOf(1.0))
-        kalmanHy = H
-        // x = [ 10 ]
-        val x = ArrayRealVector(doubleArrayOf(constantVoltage))
-        // Q = [ 1e-5 ]
-        val Q = Array2DRowRealMatrix(doubleArrayOf(processNoise))
-        // P = [ 1 ]
-        val P0 = Array2DRowRealMatrix(doubleArrayOf(1.0))
-        // R = [ 0.1 ]
-        val R = Array2DRowRealMatrix(doubleArrayOf(measurementNoise))
-
-        val pm = DefaultProcessModel(A, B, Q, x, P0)
-        val mm = DefaultMeasurementModel(H, R)
-        KalmanFilter(pm, mm)
-    }
 
     private val graphicsPaint: Paint by lazy {
         Paint().apply {
