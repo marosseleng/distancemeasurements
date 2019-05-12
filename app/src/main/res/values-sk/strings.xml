@@ -107,6 +107,7 @@
     <string name="positioning_y">Pozícia y (cm)</string>
     <string name="positioning_add">Pridať</string>
     <string name="positioning_done">Hotovo</string>
+    <string name="positioning_android_9">Táto funkcia je k dispozícii len pre Android 9+</string>
 
     <!-- About -->
     <string name="about_source_explanation">Táto aplikácia bola vytvorená ako súčasť diplomovej práce na Fakulte informatiky Masarykovej univerzity v Brne.</string>

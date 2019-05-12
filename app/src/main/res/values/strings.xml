@@ -107,6 +107,7 @@
     <string name="positioning_y">Position y (cm)</string>
     <string name="positioning_add">Add</string>
     <string name="positioning_done">Done</string>
+    <string name="positioning_android_9">This feature is only supported on Android 9+</string>
 
     <!-- About -->
     <string name="about_source_explanation">This application was developed as a part of Diploma thesis at the Faculty of informatics, Masaryk university, Brno, Czechia.</string>
