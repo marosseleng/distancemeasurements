@@ -16,7 +16,6 @@
 
 package com.marosseleng.distancemeasurements.requestcodes
 
-/**
- * @author Maroš Šeleng
- */
+
 const val EXPORT_CHART_STORAGE_PERMISSION = 100
+const val EXPORT_VALUES_STORAGE_PERMISSION = 101

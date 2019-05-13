@@ -27,9 +27,6 @@ import org.junit.Before
 import org.junit.runner.RunWith
 import java.io.IOException
 
-/**
- * @author Maroš Šeleng
- */
 @RunWith(AndroidJUnit4::class)
 class SimpleEntityReadWriteTest {
     private lateinit var dao: Dao

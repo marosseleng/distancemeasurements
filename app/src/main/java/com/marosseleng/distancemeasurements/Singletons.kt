@@ -20,9 +20,6 @@ import android.net.wifi.WifiManager
 import android.net.wifi.rtt.WifiRttManager
 import androidx.core.content.getSystemService
 
-/**
- * @author Maroš Šeleng
- */
 val application = Application.instance
 val database = application.database
 val dao = database.dao()

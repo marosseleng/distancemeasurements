@@ -85,8 +85,8 @@
         android:label="@string/measurement_detail_title"
         tools:layout="@layout/fragment_measurement_detail">
         <argument
-            android:name="measurement"
-            app:argType="com.marosseleng.distancemeasurements.data.Measurement" />
+            android:name="measurementId"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/newBluetooth"

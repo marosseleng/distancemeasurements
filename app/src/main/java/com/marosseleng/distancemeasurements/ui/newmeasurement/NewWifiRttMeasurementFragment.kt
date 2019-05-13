@@ -42,9 +42,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_new_wifi_rtt_measurement.*
 import kotlinx.android.synthetic.main.inner_measurement_setup.*
 
-/**
- * @author Maroš Šeleng
- */
 @RequiresApi(Build.VERSION_CODES.P)
 class NewWifiRttMeasurementFragment : Fragment() {
 

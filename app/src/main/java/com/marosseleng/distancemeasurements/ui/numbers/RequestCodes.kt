@@ -16,9 +16,7 @@
 
 package com.marosseleng.distancemeasurements.ui.numbers
 
-/**
- * @author Maroš Šeleng
- */
+
 const val BLE_LOCATION_PERMISSION = 11
 const val BLE_ENABLE_BLUETOOTH = 12
 

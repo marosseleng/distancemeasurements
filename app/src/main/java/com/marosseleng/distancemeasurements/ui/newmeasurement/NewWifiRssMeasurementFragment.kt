@@ -40,9 +40,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_new_wifi_rss_measurement.*
 import kotlinx.android.synthetic.main.inner_measurement_setup.*
 
-/**
- * @author Maroš Šeleng
- */
 class NewWifiRssMeasurementFragment : Fragment() {
 
     private lateinit var viewModel: WifiRssMeasurementViewModel

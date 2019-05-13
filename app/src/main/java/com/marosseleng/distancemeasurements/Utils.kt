@@ -29,9 +29,6 @@ import androidx.core.net.toUri
 import com.marosseleng.distancemeasurements.data.MeasurementAnchorDevice
 import java.io.File
 
-/**
- * @author Maroš Šeleng
- */
 fun PackageManager.hasBluetoothLeFeature(): Boolean = hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
 
 fun PackageManager.hasWifiRttFeature(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P

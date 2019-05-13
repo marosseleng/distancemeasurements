@@ -36,9 +36,6 @@ import com.marosseleng.distancemeasurements.data.MeasurementType
 import kotlinx.coroutines.*
 import timber.log.Timber
 
-/**
- * @author Maroš Šeleng
- */
 class WifiRssMeasurementViewModel : ViewModel() {
 
     private companion object {
@@ -50,7 +47,7 @@ class WifiRssMeasurementViewModel : ViewModel() {
         get() = _measurementProgress
 
     private val singleResults = MutableLiveData<MeasuredValue.Factory>()
-    val measuredValues = accumulateFromStart(emitWhile(singleResults) {
+    val measuredValues = accumulateAtStart(emitWhile(singleResults) {
         _measurementProgress.value is MeasurementProgress.Started
     })
 

@@ -46,9 +46,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_new_bluetooth_measurement.*
 import kotlinx.android.synthetic.main.inner_measurement_setup.*
 
-/**
- * @author Maroš Šeleng
- */
 class NewBluetoothMeasurementFragment : Fragment() {
 
     private lateinit var viewModel: BluetoothMeasurementViewModel

@@ -23,9 +23,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.marosseleng.distancemeasurements.data.MeasurementType
 
-/**
- * @author Maroš Šeleng
- */
 class RawMeasuredValueAdapter(private val measurementType: MeasurementType) : RecyclerView.Adapter<RawMeasuredValueAdapter.ViewHolder>() {
 
     private val items = mutableListOf<Int>()

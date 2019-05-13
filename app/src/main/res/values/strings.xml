@@ -71,6 +71,7 @@
     <string name="new_measurement_wifi_rss">Wifi RSS</string>
     <string name="new_measurement_wifi_rtt">Wifi RTT</string>
     <string name="new_measurement_begin">Begin</string>
+    <string name="new_measurement_permission_denied">Can\'t start the measurement, location access denied</string>
 
     <!-- New Bluetooth measurement -->
     <string name="new_bluetooth_select_device">Select the device to measure the distance from</string>

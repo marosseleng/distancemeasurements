@@ -27,10 +27,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * @author Maroš Šeleng
- */
-
-/**
  * Creates [MutableLiveData] and immediately posts the specified [firstValue]
  */
 fun <T> startWith(firstValue: T): MutableLiveData<T> {
@@ -59,6 +55,9 @@ fun <T, R> distinct(source: LiveData<T>, distinctor: T.() -> R): LiveData<T> {
     }
 }
 
+/**
+ * Continuously adds an item emitted by [source] to the list (if not already present) and emits this list
+ */
 fun <T, R> group(source: LiveData<T>, distinctor: (T) -> R, livelinessCriteria: (T) -> Boolean): LiveData<List<T>> {
     return MediatorLiveData<List<T>>().apply {
 
@@ -81,7 +80,6 @@ fun <T, R> group(source: LiveData<T>, distinctor: (T) -> R, livelinessCriteria: 
 
 /**
  * Emit items from the [source] while [condition] is true
- * TODO create version accepting LiveData<Boolean>
  */
 fun <T> emitWhile(source: LiveData<T>, condition: () -> Boolean): LiveData<T> {
     return MediatorLiveData<T>().apply {
@@ -93,7 +91,10 @@ fun <T> emitWhile(source: LiveData<T>, condition: () -> Boolean): LiveData<T> {
     }
 }
 
-fun <T> accumulateFromStart(source: LiveData<T>): LiveData<List<T>> {
+/**
+ * Accumulates the values emitted by [source] and emits the the accumulated list with the newest value at position 0
+ */
+fun <T> accumulateAtStart(source: LiveData<T>): LiveData<List<T>> {
     return MediatorLiveData<List<T>>().apply {
         val currentValues = mutableListOf<T>()
 
@@ -104,6 +105,9 @@ fun <T> accumulateFromStart(source: LiveData<T>): LiveData<List<T>> {
     }
 }
 
+/**
+ * Returns the live data containing the Pair of the new value and the diff between the old and the new value
+ */
 fun <T> diff(
     source: LiveData<List<T>>,
     callbackFactory: (oldList: List<T>, newList: List<T>) -> DiffUtil.Callback
@@ -148,6 +152,9 @@ fun <T> filterNot(source: LiveData<T>, filter: LiveData<Boolean>): LiveData<T> {
     }
 }
 
+/**
+ * Monitors the emissions of [source1] and [source2], once both sources emits non-null value, it emits the pair of them
+ */
 fun <S, T> combineLatest(source1: LiveData<S>, source2: LiveData<T>): LiveData<Pair<S, T>> {
     return MediatorLiveData<Pair<S, T>>().apply {
         var lastFromSource1: S? = null
@@ -170,9 +177,62 @@ fun <S, T> combineLatest(source1: LiveData<S>, source2: LiveData<T>): LiveData<P
     }
 }
 
+/**
+ * Monitors the emissions of [source1] and [source2] [source3], once both sources emits non-null value, it emits the pair of them
+ */
+fun <S, T, U> combineLatest(
+    source1: LiveData<S>,
+    source2: LiveData<T>,
+    source3: LiveData<U>
+): LiveData<Triple<S, T, U>> {
+    return MediatorLiveData<Triple<S, T, U>>().apply {
+        var lastFromSource1: S? = null
+        var lastFromSource2: T? = null
+        var lastFromSource3: U? = null
+        fun notify() {
+            val tmp1 = lastFromSource1
+            val tmp2 = lastFromSource2
+            val tmp3 = lastFromSource3
+            if (tmp1 != null && tmp2 != null && tmp3 != null) {
+                postValue(Triple(tmp1, tmp2, tmp3))
+            }
+        }
+        addSource(source1) {
+            lastFromSource1 = it
+            notify()
+        }
+        addSource(source2) {
+            lastFromSource2 = it
+            notify()
+        }
+        addSource(source3) {
+            lastFromSource3 = it
+            notify()
+        }
+    }
+}
+
+/**
+ * Similar to [combineLatest] but allows to modify the resulting emission by providing own combinator
+ */
 fun <S, T, R> combineLatest(source1: LiveData<S>, source2: LiveData<T>, combinator: (S, T) -> R): LiveData<R> {
     return map(combineLatest(source1, source2)) {
         val (first, second) = it
         combinator(first, second)
+    }
+}
+
+/**
+ * Similar to [combineLatest] but allows to modify the resulting emission by providing own combinator
+ */
+fun <S, T, U, R> combineLatest(
+    source1: LiveData<S>,
+    source2: LiveData<T>,
+    source3: LiveData<U>,
+    combinator: (S, T, U) -> R
+): LiveData<R> {
+    return map(combineLatest(source1, source2, source3)) {
+        val (first, second, third) = it
+        combinator(first, second, third)
     }
 }

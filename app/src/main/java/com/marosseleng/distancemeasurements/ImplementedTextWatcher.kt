@@ -19,9 +19,6 @@ package com.marosseleng.distancemeasurements
 import android.text.Editable
 import android.text.TextWatcher
 
-/**
- * @author Maroš Šeleng
- */
 abstract class ImplementedTextWatcher : TextWatcher {
     override fun afterTextChanged(s: Editable?) {}
 

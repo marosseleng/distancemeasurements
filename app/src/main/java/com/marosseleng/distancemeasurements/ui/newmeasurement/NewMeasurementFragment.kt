@@ -32,21 +32,21 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.marosseleng.distancemeasurements.*
+import com.marosseleng.distancemeasurements.delegates.PermissionsDelegate
+import com.marosseleng.distancemeasurements.delegates.ShouldShowRationaleDelegate
 import com.marosseleng.distancemeasurements.tags.LOCATION_PERMISSION_RATIONALE
 import com.marosseleng.distancemeasurements.tags.WIFI_DISABLED
 import com.marosseleng.distancemeasurements.tags.WIFI_NOT_CONNECTED
+import com.marosseleng.distancemeasurements.ui.common.PositiveButtonClickedListener
 import com.marosseleng.distancemeasurements.ui.measurementdetail.LocationPermissionRationaleDialogFragment
-import com.marosseleng.distancemeasurements.ui.measurementdetail.PositiveButtonClickedListener
 import com.marosseleng.distancemeasurements.ui.measurementdetail.WifiDisabledDialogFragment
 import com.marosseleng.distancemeasurements.ui.measurementdetail.WifiNotConnectedDialogFragment
 import com.marosseleng.distancemeasurements.ui.numbers.*
 import kotlinx.android.synthetic.main.fragment_new_measurement.*
 import timber.log.Timber
 
-/**
- * @author Maroš Šeleng
- */
 class NewMeasurementFragment : Fragment(), PositiveButtonClickedListener {
 
     private val validRadioButtonIds = setOf(R.id.newBluetooth, R.id.newRss, R.id.newRtt)
@@ -55,6 +55,9 @@ class NewMeasurementFragment : Fragment(), PositiveButtonClickedListener {
         val bluetoothManager = activity?.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         bluetoothManager?.adapter
     }
+
+    private val hasFineLocationPermission: Boolean by PermissionsDelegate(Manifest.permission.ACCESS_FINE_LOCATION)
+    private val shouldShowRationale: Boolean by ShouldShowRationaleDelegate(Manifest.permission.ACCESS_FINE_LOCATION)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_new_measurement, container, false)
@@ -92,12 +95,16 @@ class NewMeasurementFragment : Fragment(), PositiveButtonClickedListener {
             return
         }
         val result = grantResults[0]
-        val shouldRequestRationale = shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
         if (result == PERMISSION_GRANTED) {
             findNavController().navigate(getActionForRequestCode(requestCode))
-        } else if (!shouldRequestRationale) {
-            // user checked "Don't ask me again"
-            TODO()
+        } else if (!shouldShowRationale) {
+            Snackbar
+                .make(
+                    newMeasurementContent,
+                    R.string.new_measurement_permission_denied,
+                    Snackbar.LENGTH_SHORT
+                )
+                .show()
         }
     }
 
@@ -115,14 +122,14 @@ class NewMeasurementFragment : Fragment(), PositiveButtonClickedListener {
     }
 
     private fun hasLocationPermission(action: Int): Boolean {
-        val activity = activity ?: return false
         val requestCode = getRequestCodeForAction(action)
-        if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                val fm = fragmentManager ?: return false
-                LocationPermissionRationaleDialogFragment()
-                    .apply { setTargetFragment(this@NewMeasurementFragment, requestCode) }
-                    .show(fm, LOCATION_PERMISSION_RATIONALE)
+        if (!hasFineLocationPermission) {
+            if (shouldShowRationale) {
+                fragmentManager?.run {
+                    LocationPermissionRationaleDialogFragment()
+                        .apply { setTargetFragment(this@NewMeasurementFragment, requestCode) }
+                        .show(this, LOCATION_PERMISSION_RATIONALE)
+                }
             } else {
                 requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), requestCode)
             }

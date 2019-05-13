@@ -29,9 +29,6 @@ import com.marosseleng.distancemeasurements.application
 import com.marosseleng.distancemeasurements.data.Measurement
 import kotlinx.android.synthetic.main.item_measurement.view.*
 
-/**
- * @author Maroš Šeleng
- */
 class MeasurementAdapter(val callback: (Measurement) -> Unit) : RecyclerView.Adapter<MeasurementAdapter.ViewHolder>() {
 
     var items: List<Measurement> = emptyList()

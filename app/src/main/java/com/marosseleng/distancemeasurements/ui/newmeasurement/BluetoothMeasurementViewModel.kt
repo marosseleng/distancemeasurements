@@ -40,9 +40,6 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * @author Maroš Šeleng
- */
 class BluetoothMeasurementViewModel : ViewModel() {
 
     private companion object {
@@ -74,7 +71,7 @@ class BluetoothMeasurementViewModel : ViewModel() {
         }
     private var lastScanPostedMillis = 0L
 
-    val measuredValues = accumulateFromStart(emitWhile(map(singleResults, ScanResult::toMeasuredValueFactory)) {
+    val measuredValues = accumulateAtStart(emitWhile(map(singleResults, ScanResult::toMeasuredValueFactory)) {
         selectedDevice != null && _measurementProgress.value is MeasurementProgress.Started
     })
 
@@ -124,7 +121,9 @@ class BluetoothMeasurementViewModel : ViewModel() {
             lastScanPostedMillis = 0L
             mBluetoothAdapter?.bluetoothLeScanner?.startScan(
                 scanFilters,
-                ScanSettings.Builder().build(),
+                ScanSettings.Builder()
+                    .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                    .build(),
                 scanCallback
             )
         } else {

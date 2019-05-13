@@ -25,9 +25,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.marosseleng.distancemeasurements.R
 import kotlinx.android.synthetic.main.item_beacon.view.*
 
-/**
- * @author Maroš Šeleng
- */
 class BeaconsAdapter(val onClickListener: (ScanResult) -> Unit) :
     RecyclerView.Adapter<BeaconsAdapter.BeaconViewHolder>() {
 

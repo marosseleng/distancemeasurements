@@ -34,9 +34,6 @@ import com.marosseleng.distancemeasurements.ImplementedTextWatcher
 import com.marosseleng.distancemeasurements.R
 import kotlinx.android.synthetic.main.fragment_positioning.*
 
-/**
- * @author Maroš Šeleng
- */
 class PositioningFragment : Fragment() {
 
     private companion object {

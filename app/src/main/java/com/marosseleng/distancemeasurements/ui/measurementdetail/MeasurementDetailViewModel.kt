@@ -17,10 +17,13 @@
 package com.marosseleng.distancemeasurements.ui.measurementdetail
 
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Environment
-import androidx.lifecycle.*
+import android.text.format.DateUtils
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations.map
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.marosseleng.distancemeasurements.*
 import com.marosseleng.distancemeasurements.data.MeasuredValue
 import com.marosseleng.distancemeasurements.data.Measurement
@@ -30,44 +33,30 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-/**
- * Typealias for a function that takes some sort of input and calculates the distance in centimeters
- */
-typealias DistanceComputer = (Int) -> Int
+class MeasurementDetailViewModel(private val measurementId: Long) : ViewModel() {
 
-sealed class ExportProgress {
-    object NotStarted : ExportProgress()
-    object Running : ExportProgress()
-    data class Success(val fileUri: Uri) : ExportProgress()
-    data class Failure(val cause: Throwable) : ExportProgress()
-}
+    val measurement: LiveData<Measurement?> = dao.getMeasurementByIdLiveData(measurementId)
 
-/**
- * @author Maroš Šeleng
- */
-class MeasurementDetailViewModel(private val measurement: Measurement) : ViewModel() {
-
-    private val _values: MutableLiveData<List<MeasuredValue>> = MutableLiveData()
     /**
      * Values represent the distances from the APs in meters
      */
     val values: LiveData<List<MeasuredValue>>
-        get() = _values
-
-    private val graphValues: LiveData<List<Float>> = map(_values) {
-        it.map { measuredValue ->
-            measuredValue.measuredValue.toFloat()
-        }
-    }
+        get() = dao.getMeasurementValuesLiveData(measurementId)
 
     private val _exportProgress = startWith<ExportProgress>(ExportProgress.NotStarted)
     val exportProgress: LiveData<ExportProgress>
         get() = _exportProgress
 
     private val realDistances: LiveData<RealDistances>
-        get() = dao.getRealDistances(measurement.id)
+        get() = dao.getRealDistances(measurementId)
 
-    val dataSets = combineLatest(graphValues, realDistances) { measured, real ->
+    private val graphValues: LiveData<List<Float>> = map(values) {
+        it.map { measuredValue ->
+            measuredValue.measuredValue.toFloat()
+        }
+    }
+
+    val dataSets = combineLatest(measurement, graphValues, realDistances) { measurement, measured, real ->
         var rawRealList = real.asList()
         if (rawRealList.size > measured.size) {
             rawRealList = rawRealList.dropLast(rawRealList.size - measured.size)
@@ -87,7 +76,7 @@ class MeasurementDetailViewModel(private val measurement: Measurement) : ViewMod
         val inMin = 0
         val inMax = realList.lastIndex
         val measuredMapped = measuredList.mapIndexed { index, fl ->
-            if (measurement.measurementType == MeasurementType.RTT) {
+            if (measurement?.measurementType == MeasurementType.RTT) {
                 Pair(index.toFloat(), fl / 10f)
             } else {
                 Pair(index.toFloat(), distanceComputer(fl.toInt()).toFloat())
@@ -100,39 +89,34 @@ class MeasurementDetailViewModel(private val measurement: Measurement) : ViewMod
         Pair(measuredMapped, realMapped)
     }
 
-    private fun calculateDistanceMeters(signalLevelInDb: Double, freqInMHz: Double = 2400.0): Double {
-        val exp = (27.55 - 20 * Math.log10(freqInMHz) + Math.abs(signalLevelInDb)) / 20.0
-        return Math.pow(10.0, exp)
-    }
-
-    /**
-     * Centimeters
-     */
-    private val distanceComputer: DistanceComputer = { (calculateDistanceMeters(it.toDouble()) * 100).toInt() }
-    // TODO livedata for statistical values
-
-    init {
+    fun saveEdits(note: String?, realDistances: String?) {
         viewModelScope.launch(Dispatchers.IO) {
-            _values.postValue(Application.instance.database.dao().getMeasurementValues(measurement.id))
+            val distances = RealDistances().apply { parseUserInput(realDistances) }
+            measurement.value?.copy(note = note, realDistances = distances)
+                ?.let {
+                    dao.updateMeasurement(it)
+                }
         }
     }
 
-    fun setDistanceComputer(computer: DistanceComputer) {
-
-    }
-
-    fun exportBitmap(bitmap: Bitmap, fileName: String) {
+    fun exportBitmap(bitmap: Bitmap) {
         _exportProgress.postValue(ExportProgress.Running)
         viewModelScope.launch(Dispatchers.IO) {
+            val measurement = measurement.value ?: return@launch
+            val fileName = getExportFileName(measurement)
             val targetDirectory = File(Environment.getExternalStorageDirectory().absolutePath + "/Distancemeasurements")
             if (!targetDirectory.exists()) {
                 if (!targetDirectory.mkdirs()) {
-                    _exportProgress.postValue(ExportProgress.Failure(IllegalStateException("Cannot create target directory for exports.")))
+                    _exportProgress.postValue(
+                        ExportProgress.Failure(
+                            IllegalStateException("Cannot create target directory for exports.")
+                        )
+                    )
                 }
             }
             val targetFilePath = targetDirectory.absolutePath + "/" + fileName + ".png"
             val existingSimilarFiles = targetDirectory.listFiles { _, name ->
-                name.contains(fileName)
+                name.contains("$fileName.png")
             }
 
             val targetFile: File = if (existingSimilarFiles.isNotEmpty()) {
@@ -165,9 +149,11 @@ class MeasurementDetailViewModel(private val measurement: Measurement) : ViewMod
         }
     }
 
-    fun exportValues(fileName: String) {
+    fun exportValues() {
         _exportProgress.postValue(ExportProgress.Running)
         viewModelScope.launch(Dispatchers.IO) {
+            val measurement = measurement.value ?: return@launch
+            val fileName = getExportFileName(measurement)
             val targetDirectory = File(Environment.getExternalStorageDirectory().absolutePath + "/Distancemeasurements")
             if (!targetDirectory.exists()) {
                 if (!targetDirectory.mkdirs()) {
@@ -176,7 +162,7 @@ class MeasurementDetailViewModel(private val measurement: Measurement) : ViewMod
             }
             val targetFilePath = targetDirectory.absolutePath + "/" + fileName + ".csv"
             val existingSimilarFiles = targetDirectory.listFiles { _, name ->
-                name.contains(fileName)
+                name.contains("$fileName.csv")
             }
 
             val targetFile: File = if (existingSimilarFiles.isNotEmpty()) {
@@ -203,23 +189,38 @@ class MeasurementDetailViewModel(private val measurement: Measurement) : ViewMod
         }
     }
 
-    private fun prepareCsvText() = values.value?.joinToString("\n") { "${it.timestamp}, ${it.measuredValue}, ${distanceComputer(it.measuredValue)}" } ?: ""
-
     fun resetExportProgress() {
         _exportProgress.postValue(ExportProgress.NotStarted)
     }
 
-    fun saveEdits(note: String?, realDistances: String?) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val distances = RealDistances().apply { parseUserInput(realDistances) }
-            dao.updateMeasurement(measurement.copy(note = note, realDistances = distances))
-        }
+    private fun calculateDistanceMeters(signalLevelInDb: Double, freqInMHz: Double = 2400.0): Double {
+        val exp = (27.55 - 20 * Math.log10(freqInMHz) + Math.abs(signalLevelInDb)) / 20.0
+        return Math.pow(10.0, exp)
     }
 
-    class Factory(val measurement: Measurement) : ViewModelProvider.Factory {
+    /**
+     * Centimeters
+     */
+    private val distanceComputer: (Int) -> Int = { (calculateDistanceMeters(it.toDouble()) * 100).toInt() }
+
+    private fun getExportFileName(measurement: Measurement): String {
+        val dateFormatted =
+            DateUtils.formatDateTime(
+                application,
+                measurement.timestamp,
+                DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_TIME
+            )
+        return "${measurement.measurementType}-$dateFormatted-(${measurement.note ?: ""})"
+    }
+
+    private fun prepareCsvText() =
+        values.value?.joinToString("\n") { "${it.timestamp}, ${it.measuredValue}, ${distanceComputer(it.measuredValue)}" }
+            ?: ""
+
+    class Factory(val measurementId: Long) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return MeasurementDetailViewModel(measurement) as T
+            return MeasurementDetailViewModel(measurementId) as T
         }
     }
 }

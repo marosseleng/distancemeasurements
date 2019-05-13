@@ -22,11 +22,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.marosseleng.distancemeasurements.R
+import com.marosseleng.distancemeasurements.ui.common.NegativeButtonClickedListener
+import com.marosseleng.distancemeasurements.ui.common.PositiveButtonClickedListener
 import kotlinx.android.synthetic.main.dialog_wifi_not_connected.*
 
-/**
- * @author Maroš Šeleng
- */
 class WifiNotConnectedDialogFragment : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

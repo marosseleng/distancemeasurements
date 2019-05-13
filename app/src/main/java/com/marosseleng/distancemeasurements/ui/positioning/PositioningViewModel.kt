@@ -40,9 +40,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-/**
- * @author Maroš Šeleng
- */
 @RequiresApi(Build.VERSION_CODES.P)
 class PositioningViewModel : ViewModel() {
 
@@ -99,7 +96,7 @@ class PositioningViewModel : ViewModel() {
                 } else {
                     // TODO handle permission rejection
                 }
-                delay(300) // TODO is it good or bad or wtf
+                delay(300)
             }
         }
     }

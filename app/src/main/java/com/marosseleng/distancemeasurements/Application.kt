@@ -20,9 +20,6 @@ import androidx.room.Room
 import com.marosseleng.distancemeasurements.data.AppDatabase
 import timber.log.Timber
 
-/**
- * @author Maroš Šeleng
- */
 class Application : android.app.Application() {
 
     companion object {

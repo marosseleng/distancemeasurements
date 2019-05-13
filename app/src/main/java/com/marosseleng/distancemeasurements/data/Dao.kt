@@ -22,9 +22,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 
-/**
- * @author Maroš Šeleng
- */
 @androidx.room.Dao
 interface Dao {
     @Query("SELECT * FROM measurements ORDER BY timestamp DESC")
@@ -36,8 +33,14 @@ interface Dao {
     @Query("SELECT * FROM measurements WHERE id = :measurementId LIMIT 1")
     suspend fun getMeasurementById(measurementId: Long): Measurement?
 
+    @Query("SELECT * FROM measurements WHERE id = :measurementId LIMIT 1")
+    fun getMeasurementByIdLiveData(measurementId: Long): LiveData<Measurement?>
+
     @Query("SELECT * FROM measured_values WHERE measurement_id = :measurementId ORDER BY timestamp")
     suspend fun getMeasurementValues(measurementId: Long): List<MeasuredValue>
+
+    @Query("SELECT * FROM measured_values WHERE measurement_id = :measurementId ORDER BY timestamp")
+    fun getMeasurementValuesLiveData(measurementId: Long): LiveData<List<MeasuredValue>>
 
     @Query("SELECT real_distances FROM measurements where id = :measurementId LIMIT 1")
     fun getRealDistances(measurementId: Long): LiveData<RealDistances>

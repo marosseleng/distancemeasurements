@@ -28,9 +28,6 @@ import com.marosseleng.distancemeasurements.R
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
-/**
- * @author Maroš Šeleng
- */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration

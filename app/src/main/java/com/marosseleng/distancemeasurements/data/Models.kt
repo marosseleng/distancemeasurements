@@ -25,9 +25,6 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
-/**
- * @author Maroš Šeleng
- */
 @Entity(tableName = "measurements")
 @Parcelize
 data class Measurement(

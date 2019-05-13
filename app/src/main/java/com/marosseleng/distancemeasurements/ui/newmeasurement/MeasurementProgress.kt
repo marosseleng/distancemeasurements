@@ -16,9 +16,7 @@
 
 package com.marosseleng.distancemeasurements.ui.newmeasurement
 
-/**
- * @author Maroš Šeleng
- */
+
 sealed class MeasurementProgress {
     object NotStarted : MeasurementProgress()
     object Started : MeasurementProgress()

@@ -71,6 +71,7 @@
     <string name="new_measurement_wifi_rss">Wifi RSS</string>
     <string name="new_measurement_wifi_rtt">Wifi RTT</string>
     <string name="new_measurement_begin">Začať</string>
+    <string name="new_measurement_permission_denied">Meranie nie je možné pretože nebol povolený prístup k polohe</string>
 
     <!-- New Bluetooth measurement -->
     <string name="new_bluetooth_select_device">Vyberte zariadenie, od ktorého sa bude merať vzdialenosť</string>

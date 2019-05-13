@@ -46,7 +46,7 @@ class MeasurementsFragment : Fragment(), AdapterView.OnItemSelectedListener {
         super.onActivityCreated(savedInstanceState)
 
         val measurementAdapter = MeasurementAdapter {
-            val action = MeasurementsFragmentDirections.openMeasurementDetailAction(it)
+            val action = MeasurementsFragmentDirections.openMeasurementDetailAction(it.id)
             findNavController().navigate(action)
         }
 

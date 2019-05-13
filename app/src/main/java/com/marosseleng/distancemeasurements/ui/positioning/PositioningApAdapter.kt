@@ -24,9 +24,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.marosseleng.distancemeasurements.R
 
-/**
- * @author Maroš Šeleng
- */
 class PositioningApAdapter(private val items: MutableList<ApInSpace> = mutableListOf()) :
     RecyclerView.Adapter<PositioningApAdapter.ViewHolder>() {
 

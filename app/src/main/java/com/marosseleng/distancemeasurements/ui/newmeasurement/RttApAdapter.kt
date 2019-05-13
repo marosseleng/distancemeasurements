@@ -28,9 +28,6 @@ import com.marosseleng.distancemeasurements.R
 import com.marosseleng.distancemeasurements.application
 import kotlinx.android.synthetic.main.item_beacon.view.*
 
-/**
- * @author Maroš Šeleng
- */
 class RttApAdapter(val onClickListener: (ScanResult) -> Unit) : RecyclerView.Adapter<RttApAdapter.ViewHolder>() {
 
     var aps: List<ScanResult> = emptyList()

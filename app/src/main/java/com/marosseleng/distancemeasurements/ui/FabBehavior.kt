@@ -21,9 +21,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-/**
- * @author Maroš Šeleng
- */
 class FabBehavior : FloatingActionButton.Behavior() {
     override fun layoutDependsOn(parent: CoordinatorLayout, child: FloatingActionButton, dependency: View) =
         dependency is RecyclerView

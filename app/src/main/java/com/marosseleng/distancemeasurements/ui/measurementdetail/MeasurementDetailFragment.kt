@@ -44,27 +44,26 @@ import com.marosseleng.distancemeasurements.data.Measurement
 import com.marosseleng.distancemeasurements.delegates.PermissionsDelegate
 import com.marosseleng.distancemeasurements.delegates.ShouldShowRationaleDelegate
 import com.marosseleng.distancemeasurements.requestcodes.EXPORT_CHART_STORAGE_PERMISSION
+import com.marosseleng.distancemeasurements.requestcodes.EXPORT_VALUES_STORAGE_PERMISSION
 import com.marosseleng.distancemeasurements.tags.STORAGE_PERMISSION_RATIONALE
+import com.marosseleng.distancemeasurements.ui.common.BottomSheetDialogListener
 import kotlinx.android.synthetic.main.fragment_measurement_detail.*
 import timber.log.Timber
 
-/**
- * @author Maroš Šeleng
- */
-class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
+class MeasurementDetailFragment : Fragment(), BottomSheetDialogListener {
 
     private lateinit var viewModel: MeasurementDetailViewModel
     private lateinit var valuesAdapter: MeasuredValueAdapter
     private val args: MeasurementDetailFragmentArgs by navArgs()
-    private val measurement: Measurement by lazy { args.measurement }
+    private val measurementId: Long by lazy { args.measurementId }
 
     private val hasExternalStoragePermission: Boolean by PermissionsDelegate(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private val shouldShowRationale: Boolean by ShouldShowRationaleDelegate(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-    private val exportFileName: String by lazy {
+    private fun getTitleFormatted(measurement: Measurement): String {
         val dateFormatted =
             DateUtils.formatDateTime(application, measurement.timestamp, FORMAT_SHOW_DATE or FORMAT_SHOW_TIME)
-        "${measurement.measurementType}-$dateFormatted"
+        return "${measurement.measurementType}-$dateFormatted"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,10 +79,8 @@ class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, MeasurementDetailViewModel.Factory(measurement))
+        viewModel = ViewModelProviders.of(this, MeasurementDetailViewModel.Factory(measurementId))
             .get(MeasurementDetailViewModel::class.java)
-
-        title.text = exportFileName
 
         valuesAdapter = MeasuredValueAdapter()
 
@@ -92,6 +89,20 @@ class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
     }
 
     private fun bindViewModel() {
+        viewModel.measurement.observe(this, Observer { measurement: Measurement? ->
+            Timber.e("==>observing measurement: %s", measurement)
+            if (measurement == null) {
+                return@Observer
+            }
+            title.text = getTitleFormatted(measurement)
+            if (measurement.realDistances.parsedValues != realDistances.editText?.text?.toString()) {
+                realDistances.editText?.setText(measurement.realDistances.parsedValues)
+            }
+            if (measurement.note != note.editText?.text?.toString()) {
+                note.editText?.setText(measurement.note)
+            }
+        })
+
         viewModel.values.observe(this, Observer {
             val isListEmpty = it.isEmpty()
             noValues.isVisible = isListEmpty
@@ -146,13 +157,14 @@ class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
                 is ExportProgress.Failure -> {
                     val cause = it.cause
                     Timber.e(cause)
-                    Snackbar.make(
-                        measurementDetailContent,
-                        R.string.measurement_detail_export_failure,
-                        Snackbar.LENGTH_SHORT
-                    )
+                    Snackbar
+                        .make(
+                            measurementDetailContent,
+                            R.string.measurement_detail_export_failure,
+                            Snackbar.LENGTH_SHORT
+                        )
                         .setAction(R.string.measurement_detail_export_failure_retry) {
-                            viewModel.exportBitmap(graph.chartBitmap, exportFileName)
+                            viewModel.exportBitmap(graph.chartBitmap)
                         }
                         .show()
                     viewModel.resetExportProgress()
@@ -182,10 +194,8 @@ class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
             adapter = valuesAdapter
         }
 
-        realDistances.editText?.setText(measurement.realDistances.parsedValues)
-        note.editText?.setText(measurement.note)
-
         saveEdits.setOnClickListener {
+            Timber.d("==>saveEdits clicked, measurement: %s", viewModel.measurement.value)
             viewModel.saveEdits(note.editText?.text?.toString(), realDistances.editText?.text?.toString())
         }
 
@@ -199,58 +209,70 @@ class MeasurementDetailFragment : Fragment(), PositiveButtonClickedListener {
         saveValues.setOnClickListener {
             saveValues.isEnabled = false
             if (hasExternalStoragePermission) {
-                viewModel.exportValues(exportFileName)
+                viewModel.exportValues()
             } else {
-                // TODO check rationale!
-                requestStoragePermission()
+                if (shouldShowRationale) {
+                    val fm = fragmentManager ?: return@setOnClickListener
+                    StoragePermissionRationaleDialogFragment()
+                        .apply { setTargetFragment(this@MeasurementDetailFragment, EXPORT_VALUES_STORAGE_PERMISSION) }
+                        .show(fm, STORAGE_PERMISSION_RATIONALE)
+                } else {
+                    requestStoragePermission(EXPORT_VALUES_STORAGE_PERMISSION)
+                }
             }
         }
 
         saveGraph.setOnClickListener {
             saveGraph.isEnabled = false
             if (hasExternalStoragePermission) {
-                viewModel.exportBitmap(graph.chartBitmap, exportFileName)
+                viewModel.exportBitmap(graph.chartBitmap)
             } else {
-                // TODO check rationale!
-                requestStoragePermission()
+                if (shouldShowRationale) {
+                    val fm = fragmentManager ?: return@setOnClickListener
+                    StoragePermissionRationaleDialogFragment()
+                        .apply { setTargetFragment(this@MeasurementDetailFragment, EXPORT_CHART_STORAGE_PERMISSION) }
+                        .show(fm, STORAGE_PERMISSION_RATIONALE)
+                } else {
+                    requestStoragePermission(EXPORT_CHART_STORAGE_PERMISSION)
+                }
             }
         }
     }
 
-    private fun requestStoragePermission() {
-        requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), EXPORT_CHART_STORAGE_PERMISSION)
+    private fun requestStoragePermission(requestCode: Int) {
+        requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), requestCode)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            EXPORT_CHART_STORAGE_PERMISSION -> {
-                if (grantResults.size != 1) {
-                    return
-                }
-                saveGraph.isEnabled = true
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    viewModel.exportBitmap(graph.chartBitmap, exportFileName)
-                } else if (shouldShowRationale) {
-                    val fm = fragmentManager ?: return
-                    StoragePermissionRationaleDialogFragment()
-                        .apply { setTargetFragment(this@MeasurementDetailFragment, 0) }
-                        .show(fm, STORAGE_PERMISSION_RATIONALE)
-                } else {
-                    Snackbar.make(
-                        measurementDetailContent,
-                        R.string.measurement_detail_export_access_denied,
-                        Snackbar.LENGTH_SHORT
-                    )
-                        .show()
-                }
-            }
-            else -> {
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-            }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.size != 1) {
+            return
         }
+        saveGraph.isEnabled = true
+        saveValues.isEnabled = true
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            when (requestCode) {
+                EXPORT_CHART_STORAGE_PERMISSION -> viewModel.exportBitmap(graph.chartBitmap)
+                EXPORT_VALUES_STORAGE_PERMISSION -> viewModel.exportValues()
+            }
+        } else if (!shouldShowRationale) {
+            Snackbar
+                .make(
+                    measurementDetailContent,
+                    R.string.measurement_detail_export_access_denied,
+                    Snackbar.LENGTH_SHORT
+                )
+                .show()
+        }
+
     }
 
     override fun onPositiveButtonClicked(requestCode: Int) {
-        requestStoragePermission()
+        requestStoragePermission(requestCode)
+    }
+
+    override fun onNegativeButtonClicked(requestCode: Int) {
+        saveGraph.isEnabled = true
+        saveValues.isEnabled = true
     }
 }

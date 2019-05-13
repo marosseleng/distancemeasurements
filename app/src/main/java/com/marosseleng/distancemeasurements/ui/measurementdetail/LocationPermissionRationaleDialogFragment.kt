@@ -24,18 +24,18 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.marosseleng.distancemeasurements.R
 import com.marosseleng.distancemeasurements.ui.common.NegativeButtonClickedListener
 import com.marosseleng.distancemeasurements.ui.common.PositiveButtonClickedListener
-import kotlinx.android.synthetic.main.dialog_storage_permission_rationale.*
+import kotlinx.android.synthetic.main.dialog_location_permission_rationale.*
 
-class StoragePermissionRationaleDialogFragment : BottomSheetDialogFragment() {
+class LocationPermissionRationaleDialogFragment : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.dialog_storage_permission_rationale, container, false)
+        return inflater.inflate(R.layout.dialog_location_permission_rationale, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        allowStorage.setOnClickListener {
+        positiveButton.setOnClickListener {
             dismiss()
             val target = targetFragment ?: return@setOnClickListener
             if (target is PositiveButtonClickedListener) {
@@ -43,7 +43,7 @@ class StoragePermissionRationaleDialogFragment : BottomSheetDialogFragment() {
             }
         }
 
-        cancelStorage.setOnClickListener {
+        negativeButton.setOnClickListener {
             dismiss()
             val target = targetFragment ?: return@setOnClickListener
             if (target is NegativeButtonClickedListener) {

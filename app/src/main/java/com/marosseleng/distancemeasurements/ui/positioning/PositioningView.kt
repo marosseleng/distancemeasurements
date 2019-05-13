@@ -36,9 +36,6 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-/**
- * @author Maroš Šeleng
- */
 @RequiresApi(Build.VERSION_CODES.N)
 class PositioningView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
