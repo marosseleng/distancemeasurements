@@ -40,8 +40,7 @@ class MeasurementDetailViewModel(private val measurementId: Long) : ViewModel() 
     /**
      * Values represent the distances from the APs in meters
      */
-    val values: LiveData<List<MeasuredValue>>
-        get() = dao.getMeasurementValuesLiveData(measurementId)
+    val values: LiveData<List<MeasuredValue>> = dao.getMeasurementValuesLiveData(measurementId)
 
     private val _exportProgress = startWith<ExportProgress>(ExportProgress.NotStarted)
     val exportProgress: LiveData<ExportProgress>
